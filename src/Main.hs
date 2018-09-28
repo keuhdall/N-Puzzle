@@ -1,4 +1,10 @@
 module Main where
 
+import System.Environment
+
 main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main = do
+    args <- getArgs 
+    content <- readFile (args !! 0)
+    let l = lines content
+    mapM_ putStrLn l
