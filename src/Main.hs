@@ -2,6 +2,8 @@ module Main where
 
 import System.Environment
 
+import Parser.Parser
+
 main :: IO ()
 main = do
     args <- getArgs 
