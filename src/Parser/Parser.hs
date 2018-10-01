@@ -8,8 +8,7 @@ module Parser.Parser where
     stripComment :: String -> String
     stripComment s
         | (length (stripComment' s) == 0)   = []
-        | (length (stripComment' s) == 1)   = (stripComment' s !! 0)
-        | otherwise                         = (stripComment' s !! 1)
+        | otherwise                         = (stripComment' s !! 0)
         where
             stripComment' :: String -> [String]
             stripComment' s = 
