@@ -1,4 +1,4 @@
-module Parser where
+module Parser (clearInput, transformInput) where
     import Data.Char
     import Data.Sort
     import Data.List.Split
