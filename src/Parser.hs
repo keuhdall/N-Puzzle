@@ -20,6 +20,6 @@ module Parser (clearInput, transformInput) where
 
     -- Returns [[Int]] if the input is valid, otherwise returns Nothing
     transformInput :: [[String]] -> Maybe [[Int]]
-    transformInput xs
-        | all isDigit (concat $ concat xs) == False = Nothing
-        | otherwise = let xss = map (\x -> map (\y -> read y) x) xs in if (isValidSize xss && hasValidContent xss) then Just (xss) else Nothing
+    transformInput xss
+        | all isDigit (concat $ concat xss) == False = Nothing
+        | otherwise = let xss' = map (\xs -> map (\x -> read x) xs) xss in if (isValidSize xss' && hasValidContent xss') then Just (xss') else Nothing
