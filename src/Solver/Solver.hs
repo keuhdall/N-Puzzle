@@ -1,4 +1,4 @@
-module Solver where
+module Solver.Solver where
     import Data.Sort
 
     getSolvedGrid :: [Int] -> [Int]
