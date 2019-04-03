@@ -1,5 +1,15 @@
-module Solver.Distance where
+module Solver.Distance (getDistance, getDistance_) where
     import Data.Bits
+
+    data Distance = Manhattan | Diagonal | Euclidian | Hamming deriving (Eq, Show)
+
+    getDistance :: String -> Maybe Distance
+    getDistance s = case s of
+        "manhattan" -> Just (Manhattan)
+        "diagonal"  -> Just (Diagonal)
+        "euclidian" -> Just (Euclidian)
+        "hamming"   -> Just (Hamming)
+        _           -> Nothing
 
     manhattanDistance :: (Int, Int) -> (Int, Int) -> Int
     manhattanDistance x y = abs (fst x - fst y) + abs (snd x - snd y)
@@ -12,3 +22,10 @@ module Solver.Distance where
 
     hammingDistance :: (Int, Int) -> (Int, Int) -> Int
     hammingDistance x y = if x == y then 1 else 0
+
+    getDistance_ :: Distance -> ((Int, Int) -> (Int, Int) -> Int)
+    getDistance_ d = case d of
+        Manhattan -> manhattanDistance
+        Diagonal  -> diagonalDistance
+        Euclidian -> euclidianDistance
+        Hamming   -> hammingDistance

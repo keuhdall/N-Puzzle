@@ -18,7 +18,7 @@ module Parser (clearInput, transformInput) where
     hasValidContent :: [[Int]] -> Bool
     hasValidContent xss = let n = (length xs) - 1; xs = concat xss; ys = [0..n] in (sort xs) == ys
 
-    -- Returns [[Int]] if the input is valid, otherwise returns Nothing
+    -- Returns the input as [[Int]] if it is valid, otherwise returns Nothing
     transformInput :: [[String]] -> Maybe [[Int]]
     transformInput xss
         | all isDigit (concat $ concat xss) == False = Nothing
