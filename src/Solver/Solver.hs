@@ -26,4 +26,4 @@ module Solver.Solver where
     getSolvedGrid :: [Int] -> [Int]
     getSolvedGrid xs = sort xs
 
-    solve :: [Int] -> (BTree -> ((Int, Int) -> (Int, Int) -> Int) -> [Int] -> [Int] -> BTree) -> BTree
+    --solve :: [Int] -> (Tree -> ((Int, Int) -> (Int, Int) -> Int) -> [Int] -> [Int] -> Tree) -> Tree

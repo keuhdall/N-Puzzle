@@ -1,5 +1,5 @@
-module Methods where
+module Solver.Methods where
     import Solver.BTree
     import Solver.Distance
 
-    astar :: BTree -> ((Int, Int) -> (Int, Int) -> Int) -> [Int] -> [Int] -> BTree
+    --astar :: Tree -> ((Int, Int) -> (Int, Int) -> Int) -> [Int] -> [Int] -> Tree
