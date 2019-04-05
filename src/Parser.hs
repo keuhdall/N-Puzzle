@@ -3,6 +3,9 @@ module Parser (clearInput, transformInput) where
     import Data.Sort
     import Data.List.Split
 
+    import Solver.Solver
+    import Solver.Distance
+
     maxPuzzle :: Int
     maxPuzzle = 10
 
@@ -23,3 +26,10 @@ module Parser (clearInput, transformInput) where
     transformInput xss
         | all isDigit (concat $ concat xss) == False = Nothing
         | otherwise = let xss' = map (\xs -> map (\x -> read x) xs) xss in if (isValidSize xss' && hasValidContent xss') then Just (xss') else Nothing
+
+    -- Returns a SearchType or a SearchType and a Distance if they have been provided as arguments
+    handleArgs :: [String] -> (Maybe SearchType, Maybe Distance)
+    handleArgs xs = case (length xs) of
+        2       -> (getSearchType (xs !! 1), Nothing)
+        3       -> (getSearchType (xs !! 1), getDistance (xs !! 2))
+        _       -> (Nothing, Nothing)
