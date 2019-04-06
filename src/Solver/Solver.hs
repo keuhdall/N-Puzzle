@@ -11,7 +11,7 @@ module Solver.Solver where
         show Greedy     = "Greedy"
 
     getSearchType :: String -> Maybe SearchType
-    getSearchType = case s of
+    getSearchType s = case s of
         "astor"     -> Just (Astor)
         "uniform"   -> Just (Uniform)
         "greedy"    -> Just (Greedy)
