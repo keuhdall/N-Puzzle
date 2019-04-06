@@ -4,6 +4,7 @@ import System.Environment
 import Parser
 import Checker
 import Error
+import Logger
 
 main :: IO ()
 main = do
