@@ -1,7 +1,7 @@
 module Main where
 
 import System.Environment
-import qualified Error
+import qualified Error as E
 import Logger
 import Parser
 import Checker
@@ -14,5 +14,5 @@ main = do
     let w = map (\l' -> words l') $ drop 1 $ clearInput l
     case transformInput w of
         Just w' -> do
-            if isSolvable (concat w') then mapM_ (\z-> putStrLn $ show z) $ concat w' else putErr Error.NotSolvable
-        Nothing -> putErr Error.InvalidInput
+            if isSolvable (concat w') then mapM_ (\z-> putStrLn $ show z) $ concat w' else putErr E.NotSolvable
+        Nothing -> putErr E.InvalidInput
