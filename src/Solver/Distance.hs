@@ -5,10 +5,10 @@ module Solver.Distance (Distance, getDistance, getDistance_) where
 
     getDistance :: String -> Maybe Distance
     getDistance s = case s of
-        "manhattan" -> Just (Manhattan)
-        "diagonal"  -> Just (Diagonal)
-        "euclidian" -> Just (Euclidian)
-        "hamming"   -> Just (Hamming)
+        "manhattan" -> Just $ Manhattan
+        "diagonal"  -> Just $ Diagonal
+        "euclidian" -> Just $ Euclidian
+        "hamming"   -> Just $ Hamming
         _           -> Nothing
 
     manhattanDistance :: (Int, Int) -> (Int, Int) -> Int

@@ -12,9 +12,9 @@ module Solver.Solver where
 
     getSearchType :: String -> Maybe SearchType
     getSearchType s = case s of
-        "astar"     -> Just (Astar)
-        "uniform"   -> Just (Uniform)
-        "greedy"    -> Just (Greedy)
+        "astar"     -> Just $ Astar
+        "uniform"   -> Just $ Uniform
+        "greedy"    -> Just $ Greedy
         _           -> Nothing
 
     toString :: SearchType -> String
