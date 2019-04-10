@@ -26,4 +26,13 @@ module Solver.Solver where
     getSolvedGrid :: [Int] -> [Int]
     getSolvedGrid xs = sort xs
 
+    isSolved :: [Int] -> Bool
+    isSolved xs = xs == getSolvedGrid xs
+
+    getIndexes :: [Int] -> [(Int, Int)]
+    getIndexes xs = let len = (length xs) - 1 in zip xs [0..len]
+
+    getCoordinates :: [Int] -> Int -> (Int, Int)
+    getCoordinates xs n = let size = floor $ sqrt $ fromIntegral $ length xs; x = n `mod` size; y = n `div` size in (x, y)
+
     --solve :: [Int] -> (Tree -> ((Int, Int) -> (Int, Int) -> Int) -> [Int] -> [Int] -> Tree) -> Tree
