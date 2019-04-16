@@ -26,6 +26,13 @@ module Solver.Solver where
     getSolvedGrid :: [Int] -> [Int]
     getSolvedGrid xs = sort xs
 
+    getSolvedGrid :: Int -> [Int]
+    getSolvedGrid n = let xs = replicate n^2 (-1) in getSolvedGrid' xs 1 0 1 0 0 where
+        getSolvedGrid' xs' cur x ix y iy
+            | cur == n^2 = xs
+            | (x + ix == s) || (x + ix < 0) || (ix /= 0 && (xs !! (x+ix+y*n)) /= (-1)) = getSolvedGrid' xs cur+1 x 0 y+ix ix
+            | (y + iy == s) || (y + iy < 0) || (iy /= 0 && (xs !! ((y+iy)*s)) /= (-1)) = getSolvedGrid' xs cur+1 x-iy (-iy) y 0
+
     isSolved :: [Int] -> Bool
     isSolved xs = xs == getSolvedGrid xs
 
