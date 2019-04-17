@@ -1,6 +1,6 @@
 module Solver.Distance (Distance, getDistance) where
 
-    data Distance = Manhattan | Diagonal | Euclidian | Hamming deriving (Eq, Read, Show)
+    data Distance = Manhattan | Diagonal | Euclidian | Hamming deriving (Eq, Show)
 
     instance Read Distance where
         read "manhattan"    = Manhattan
