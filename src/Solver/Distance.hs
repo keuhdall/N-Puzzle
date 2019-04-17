@@ -1,5 +1,4 @@
 module Solver.Distance (Distance, getDistance, getDistance_) where
-    import Data.Bits
 
     data Distance = Manhattan | Diagonal | Euclidian | Hamming deriving (Eq, Show)
 
