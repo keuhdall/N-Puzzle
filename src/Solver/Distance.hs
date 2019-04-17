@@ -1,12 +1,12 @@
 module Solver.Distance (Distance, getDistance) where
 
-    data Distance = Manhattan | Diagonal | Euclidian | Hamming deriving (Eq, Show)
+    data Distance = Manhattan | Diagonal | Euclidian | Hamming deriving (Show, Eq)
 
     instance Read Distance where
-        read "manhattan"    = Manhattan
-        read "diagonal"     = Diagonal
-        read "euclidian"    = Euclidian
-        read "hamming"      = Hamming
+        readsPrec _ "manhattan" = [(Manhattan, "manhattan")]
+        readsPrec _ "diagonal"  = [(Diagonal, "diagonal")]
+        readsPrec _ "euclidian" = [(Euclidian, "euclidian")]
+        readsPrec _ "hamming"   = [(Hamming, "hamming")]
 
     manhattanDistance :: (Int, Int) -> (Int, Int) -> Int
     manhattanDistance x y = abs (fst x - fst y) + abs (snd x - snd y)

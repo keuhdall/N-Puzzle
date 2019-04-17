@@ -3,7 +3,7 @@ module Parser (clearInput, transformInput) where
     import Data.Sort
     import Data.List.Split
 
-    import Solver.Solver
+    import Solver.Methods
     import Solver.Distance
 
     maxPuzzle :: Int
@@ -30,6 +30,6 @@ module Parser (clearInput, transformInput) where
     -- Returns a SearchType or a SearchType and a Distance if they have been provided as arguments
     handleArgs :: [String] -> (Maybe SearchType, Maybe Distance)
     handleArgs xs = case (length xs) of
-        2       -> (getSearchType (xs !! 1), Nothing)
-        3       -> (getSearchType (xs !! 1), getDistance (xs !! 2))
+        2       -> (Just (read $ xs !! 1), Nothing)
+        3       -> (Just (read $ xs !! 1), Just (read $ xs !! 2))
         _       -> (Nothing, Nothing)
