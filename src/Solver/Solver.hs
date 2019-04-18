@@ -18,8 +18,11 @@ module Solver.Solver where
             | n == 0    = x':xs
             | otherwise = x:replace xs x' (n-1)
 
+    getPuzzleSize :: [a] -> Int
+    getPuzzleSize xs = floor . sqrt . fromIntegral $ length xs
+
     isSolved :: [Int] -> Bool
-    isSolved xs = let len = floor . sqrt . fromIntegral $ length xs in xs == getSolvedGrid len
+    isSolved xs = let size = getPuzzleSize xs in xs == getSolvedGrid size
 
     -- Returns the given list with indexes assotiated to each value
     getIndexes :: [Int] -> [(Int, Int)]
@@ -27,6 +30,22 @@ module Solver.Solver where
 
     -- Returns the coordinates of the given value in the list
     getCoordinates :: [Int] -> Int -> (Int, Int)
-    getCoordinates xs n = let size = floor . sqrt . fromIntegral $ length xs; x = n `mod` size; y = n `div` size in (x, y)
+    getCoordinates xs n = let size = getPuzzleSize xs; x = n `mod` size; y = n `div` size in (x, y)
+
+    -- Returns the value associated to the given coordinates in the puzzle
+    fromCoordinates :: [Int] -> (Int, Int) -> Int
+    fromCoordinates xs (a,b) = let size = getPuzzleSize xs in xs !! (size*b+a)
+
+    getNeighbors :: [Int] -> [(Int, Int)]
+    getNeighbors xs = let s = (getPuzzleSize xs)-1 in case (getCoordinates xs 0) of
+        (0,0)   -> [(0,1),(1,0)]
+        (0,s)   -> [(0,s-1),(1,s)]
+        (s,0)   -> [(s,1),(s-1,0)]
+        (0,b)   -> [(1,b),(0,b-1),(0,b+1)]
+        (a,0)   -> [(a,1),(a-1,0),(a+1,0)]
+        (s,b)   -> [(s-1,b),(s,b-1),(s,b+1)]
+        (a,s)   -> [(a,s-1),(a-1,s),(a+1,s)]
+        (a,b) | a == s && b == s -> [(s-1,s),(s,s-1)]
+        (a,b)   -> [(a,b-1),(a,b+1),(a-1,b),(a+1,b)]
 
     --solve :: [Int] -> (Tree -> ((Int, Int) -> (Int, Int) -> Int) -> [Int] -> [Int] -> Tree) -> Tree
