@@ -1,4 +1,4 @@
-module PQueue.PQueue () where
+module PQueue.PQueue (Item, insert, getFirst, getLast) where
     data Item a = Item {
         content :: a,
         priority :: Int
@@ -10,16 +10,16 @@ module PQueue.PQueue () where
     sortItems []     = []
     sortItems (p:xs) = (sortItems lesser) ++ [p] ++ (sortItems greater) where
         prio = (priority p)
-        lesser  = filter (< prio) xs
-        greater = filter (>= prio) xs
+        lesser  = filter (\x -> (priority x) < prio)  xs
+        greater = filter (\x -> (priority x) >= prio) xs
 
-    insert :: a -> PQueue a -> PQueue a
+    insert :: Item a -> PQueue a -> PQueue a
     insert x xs = sortItems (x:xs)
 
-    getFirst :: PQueue a -> (PQueue a, Maybe a)
+    getFirst :: PQueue a -> (PQueue a, Maybe (Item a))
     getFirst [] = ([], Nothing)
-    getFirst xs = let xs' = tail xs; a = Just (head xs) in (xs' a)
+    getFirst xs = let xs' = tail xs; x = Just (head xs) in (xs', x)
 
-    getLast :: PQueue a -> (PQueue a, Maybe a)
+    getLast :: PQueue a -> (PQueue a, Maybe (Item a))
     getLast [] = ([], Nothing)
-    getLast xs = let xs' = init xs; a = Just (last xs) in (xs' a)
+    getLast xs = let xs' = init xs; x = Just (last xs) in (xs', x)
