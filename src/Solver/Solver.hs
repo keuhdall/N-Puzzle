@@ -36,16 +36,17 @@ module Solver.Solver where
     fromCoordinates :: [Int] -> (Int, Int) -> Int
     fromCoordinates xs (a,b) = let size = getPuzzleSize xs in xs !! (size*b+a)
 
+    -- Returns a list of coordinates which are the coordinates of the neighbors of the `0` value in the puzzle
     getNeighbors :: [Int] -> [(Int, Int)]
     getNeighbors xs = let s = (getPuzzleSize xs)-1 in case (getCoordinates xs 0) of
         (0,0)   -> [(0,1),(1,0)]
-        (0,s)   -> [(0,s-1),(1,s)]
-        (s,0)   -> [(s,1),(s-1,0)]
-        (0,b)   -> [(1,b),(0,b-1),(0,b+1)]
-        (a,0)   -> [(a,1),(a-1,0),(a+1,0)]
-        (s,b)   -> [(s-1,b),(s,b-1),(s,b+1)]
-        (a,s)   -> [(a,s-1),(a-1,s),(a+1,s)]
         (a,b) | a == s && b == s -> [(s-1,s),(s,s-1)]
-        (a,b)   -> [(a,b-1),(a,b+1),(a-1,b),(a+1,b)]
+        (0,s) | s /= 0  -> [(0,s-1),(1,s)]
+        (s,0) | s /= 0  -> [(s,1),(s-1,0)]
+        (a,s) | s /= 0  -> [(a,s-1),(a-1,s),(a+1,s)]
+        (s,b) | s /= 0  -> [(s-1,b),(s,b-1),(s,b+1)]
+        (a,0)           -> [(a,1),(a-1,0),(a+1,0)]
+        (0,b)           -> [(1,b),(0,b-1),(0,b+1)]
+        (a,b)           -> [(a,b-1),(a,b+1),(a-1,b),(a+1,b)]
 
     --solve :: [Int] -> (Tree -> ((Int, Int) -> (Int, Int) -> Int) -> [Int] -> [Int] -> Tree) -> Tree
