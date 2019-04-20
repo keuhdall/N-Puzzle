@@ -13,4 +13,4 @@ module Solver.Methods where
         readsPrec _ "uniform"   = [(Uniform, "uniform")]
         readsPrec _ "greedy"    = [(Greedy, "greedy")]
 
-    --astar :: Tree -> ((Int, Int) -> (Int, Int) -> Int) -> [Int] -> [Int] -> Tree
+    -- astar :: [Int] -> Distance -> IO ()
