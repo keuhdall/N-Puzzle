@@ -21,6 +21,10 @@ module Solver.Grid where
     isSolved :: [Int] -> Bool
     isSolved xs = let size = getPuzzleSize xs in xs == getSolvedGrid size
 
+    -- Returns the given list with indexes assotiated to each value : [(index, value)]
+    getIndexes :: [Int] -> [(Int, Int)]
+    getIndexes xs = let len = (length xs) - 1 in zip [0..len] xs
+
     -- Returns the coordinates of the given value in the list
     getCoordinates :: [Int] -> Int -> (Int, Int)
     getCoordinates xs n =
@@ -45,10 +49,6 @@ module Solver.Grid where
         (a,0)                         -> [(a,1),(a-1,0),(a+1,0)]
         (0,b)                         -> [(1,b),(0,b-1),(0,b+1)]
         (a,b)                         -> [(a,b-1),(a,b+1),(a-1,b),(a+1,b)]
-
-    -- Returns the given list with indexes assotiated to each value : [(index, value)]
-    getIndexes :: [Int] -> [(Int, Int)]
-    getIndexes xs = let len = (length xs) - 1 in zip [0..len] xs
 
     -- Swap 2 values from a list
     swapValues :: Eq a => a -> a -> ([a] -> [a])
