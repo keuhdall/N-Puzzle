@@ -25,5 +25,5 @@ main = do
     let w = map words $ drop 1 $ clearInput l
     case transformInput w of
         Just w' -> do
-            if isSolvable $ concat w' then mapM_ (putStrLn . show) $ concat w' else putErr E.NotSolvable
+            if isSolvable $ concat w' then displayGrid $ concat w' else putErr E.NotSolvable
         Nothing -> putErr E.InvalidInput
