@@ -1,4 +1,4 @@
-module Grid where
+module Solver.Grid where
 
     -- Returns a solved grid of the given size
     getSolvedGrid :: Int -> [Int]

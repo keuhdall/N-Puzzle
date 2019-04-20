@@ -1,5 +1,4 @@
 module Solver.Methods where
-    import Solver.BTree
     import Solver.Distance
 
     data SearchType = Astar | Uniform | Greedy deriving Eq
