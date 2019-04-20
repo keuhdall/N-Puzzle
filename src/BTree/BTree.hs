@@ -1,4 +1,4 @@
-module Solver.BTree where
+module BTree.BTree where
     data Tree a = EmptyTree | Node a (Tree a) (Tree a) deriving (Show, Read, Eq)
 
     -- Utility function that create a singleton tree
