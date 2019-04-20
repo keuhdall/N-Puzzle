@@ -24,15 +24,15 @@ module Solver.Solver where
     isSolved :: [Int] -> Bool
     isSolved xs = let size = getPuzzleSize xs in xs == getSolvedGrid size
 
-    -- Returns the given list with indexes assotiated to each value
+    -- Returns the given list with indexes assotiated to each value : [(index, value)]
     getIndexes :: [Int] -> [(Int, Int)]
-    getIndexes xs = let len = (length xs) - 1 in zip xs [0..len]
+    getIndexes xs = let len = (length xs) - 1 in zip [0..len] xs
 
     -- Returns the coordinates of the given value in the list
     getCoordinates :: [Int] -> Int -> (Int, Int)
     getCoordinates xs n =
         let size = getPuzzleSize xs;
-            x' = snd . head $ filter (\x -> fst x == n) $ getIndexes xs;
+            x' = fst . head $ filter (\x -> snd x == n) $ getIndexes xs;
             x = x' `mod` size;
             y = x' `div` size in (x, y)
 
