@@ -1,4 +1,4 @@
-module PQueue.PQueue (Item, insert, getFirst, getLast) where
+module PQueue.PQueue (Item(..), PQueue(..), insert, getFirst, getLast) where
     data Item a = Item {
         content :: a,
         priority :: Int
