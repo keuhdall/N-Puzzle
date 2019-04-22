@@ -6,9 +6,11 @@ module Solver.Solver where
     import Solver.Distance
 
     getNextNodes :: [Int] -> Distance -> PQueue Int
-    getNextNodes xs d = getNextNodes' (getNeighbors xs) (getSolvedGrid $ getPuzzleSize xs) (getDistance d) [] where
-        getNextNodes' (y:[]) svd dist pq = insert (Item (fromCoordinates xs y) (dist (getCoordinates svd $ fromCoordinates xs y) y)) pq
-        getNextNodes' (y:ys) svd dist pq = getNextNodes' ys svd dist (insert (Item (fromCoordinates xs y) (dist (getCoordinates svd $ fromCoordinates xs y) y)) pq)
+    getNextNodes xs d = getNextNodes' (getNeighbors xs) [] where
+        svd = getSolvedGrid $ getPuzzleSize xs
+        dist = getDistance d
+        getNextNodes' (y:[]) pq = insert (Item (fromCoordinates xs y) (dist (getCoordinates svd $ fromCoordinates xs y) y)) pq
+        getNextNodes' (y:ys) pq = getNextNodes' ys (insert (Item (fromCoordinates xs y) (dist (getCoordinates svd $ fromCoordinates xs y) y)) pq)
         
 
     -- solve :: [Int] -> SearchType -> Distance -> IO ()
