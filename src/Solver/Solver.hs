@@ -10,7 +10,7 @@ module Solver.Solver where
         svd = getSolvedGrid $ getPuzzleSize xs
         dist = getDistance d
         getNextNodes' (y:[]) pq = insert (dist (getCoordinates svd $ fromCoordinates xs y) y) (fromCoordinates xs y) pq
-        getNextNodes' (y:ys) pq = getNextNodes' ys (insert (fromCoordinates xs y) (dist (getCoordinates svd $ fromCoordinates xs y) y) pq)
+        getNextNodes' (y:ys) pq = getNextNodes' ys (insert (dist (getCoordinates svd $ fromCoordinates xs y) y) (fromCoordinates xs y) pq)
         
 
     solve :: [Int] -> SearchType -> Distance -> IO ()
