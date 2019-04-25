@@ -17,8 +17,8 @@ cabal-version:       >=1.10
 
 executable N-Puzzle
   main-is:             Main.hs
-  other-modules:       Parser, Checker, Logger, Error, BTree.BTree, PQueue.PQueue, Solver.Distance, Solver.Methods, Solver.Solver, Solver.Grid
+  other-modules:       Parser, Checker, Logger, Error, BTree.BTree, Solver.Distance, Solver.Methods, Solver.Solver, Solver.Grid
   -- other-extensions:
-  build-depends:       base >=4.11, split >= 0.2, sort >= 1.0
+  build-depends:       base >=4.11, split >= 0.2, sort >= 1.0, pqueue >= 1.4.1.2
   hs-source-dirs:      src
   default-language:    Haskell2010
