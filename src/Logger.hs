@@ -22,7 +22,7 @@ module Logger (displayHelp, displayGrid, putErr) where
         chunkList' n xs = (take n xs) : (chunkList' n (drop n xs))
 
     displayGrid :: [Int] -> IO ()
-    displayGrid xs = let xss = chunkList xs; size = getPuzzleSize xs in mapM_ (\xs -> putStrLn . concat . map (++" ") $ map show xs) xss >>= (\_ -> putStrLn $ replicate (2 * size - 1) '-') 
+    displayGrid xs = let xss = chunkList xs; size = getPuzzleSize xs in mapM_ (\xs -> putStrLn . concat . map (++" ") $ map show xs) xss >> (putStrLn $ replicate (2 * size - 1) '-')
 
     putErr :: Error -> IO ()
     putErr e = putStrLn $ show e
