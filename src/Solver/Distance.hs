@@ -1,4 +1,4 @@
-module Solver.Distance (Distance, getDistance) where
+module Solver.Distance (Distance(..), getDistance) where
 
     data Distance = Manhattan | Diagonal | Euclidian | Hamming deriving (Show, Eq)
 
