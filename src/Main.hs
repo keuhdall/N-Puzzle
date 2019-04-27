@@ -28,6 +28,6 @@ main = do
     let w = map words $ drop 1 $ clearInput l
     case transformInput w of
         Just w' -> do
-            if isSolvable $ concat w' then solve (concat w') Astar Hamming else putErr E.NotSolvable
+            if isSolvable $ concat w' then solve (concat w') Astar Manhattan else putErr E.NotSolvable
             --if isSolvable $ concat w' then displayGrid $ concat w' else putErr E.NotSolvable
         Nothing -> putErr E.InvalidInput
