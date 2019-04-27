@@ -1,5 +1,6 @@
 module Solver.Methods where
     import qualified Data.PQueue.Prio.Max as PQ
+    import qualified Error as E
     import Logger
     import Solver.Distance
     import Solver.Grid
@@ -19,7 +20,8 @@ module Solver.Methods where
 
     astar :: [Int] -> PQ.MaxPQueue Int Int -> [[Int]] -> Distance -> NextNodesFunc -> IO ()
     astar xs os cs d nn
+        | os == PQ.empty = putErr E.NotSolvable
         | xs == getSolvedGrid (getPuzzleSize xs) = displayGrid xs
         | filter (==xs) cs /= [] = astar (xs' os) (PQ.deleteMax os) cs d nn
-        | otherwise = let nxt = nn xs d os in displayGrid xs >> (astar (xs' nxt) nxt (xs:cs) d nn) where
+        | otherwise = let nxt = nn xs d PQ.empty in displayGrid xs >> (astar (xs' nxt) nxt (xs:cs) d nn) where
             xs' a = swapValues (snd $ PQ.findMax a) 0 xs

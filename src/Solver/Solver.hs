@@ -13,4 +13,4 @@ module Solver.Solver where
         getNextNodes' (y:ys) pq = getNextNodes' ys (PQ.insert (dist (getCoordinates svd $ fromCoordinates xs y) y) (fromCoordinates xs y) pq)
 
     solve :: [Int] -> SearchType -> Distance -> IO ()
-    solve xs st d = astar xs PQ.empty [] d getNextNodes
+    solve xs st d = astar xs (PQ.singleton 1 0) [] d getNextNodes
