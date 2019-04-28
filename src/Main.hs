@@ -8,7 +8,6 @@ import Solver.Methods
 import Solver.Solver
 import Logger
 import Parser
-import Checker
 
 checkArgs :: [String] -> IO ()
 checkArgs xs = case length xs of
