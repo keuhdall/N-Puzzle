@@ -22,7 +22,8 @@ module Solver.Methods where
     astar xss os cs d nn n
         | xs == getSolvedGrid (getPuzzleSize xs) = displayGrid xs >> putStrLn ("Solved in " ++ (show n) ++ " steps.")
         | cln == PQ.empty && os /= PQ.empty = astar (tail xss) os (xs:cs) d nn (n+1)
-        | otherwise = if (cln == PQ.empty) then putErr E.NotSolvable else displayGrid xs >> (astar ((swp cln):xss) nxt (xs:cs) d nn) (n+1) where
+        | cln == PQ.empty = putErr E.NotSolvable
+        | otherwise = displayGrid xs >> (astar ((swp cln):xss) nxt (xs:cs) d nn) (n+1) where
             xs = head xss
             swp x = swapValues (snd $ PQ.findMax x) 0 xs
             gn xs = map (fromCoordinates xs) $ getNeighbors xs
