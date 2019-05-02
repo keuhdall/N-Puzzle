@@ -24,8 +24,8 @@ module Solver.Methods where
         | cln == PQ.empty && os /= PQ.empty = astar (tail xss) os (xs:cs) d nn (n+1)
         | cln == PQ.empty = putErr E.NotSolvable
         | otherwise = displayGrid xs >> (astar ((swp cln):xss) nxt (xs:cs) d nn) (n+1) where
-            xs = head xss
-            swp x = swapValues (snd $ PQ.findMax x) 0 xs
-            gn xs = map (fromCoordinates xs) $ getNeighbors xs
-            nxt = nn (swp os) d os
-            cln = PQ.filter (\x -> ((swapValues x 0 xs) `notElem` cs) && (x `elem` (gn xs))) os
+            xs      =  head xss
+            swp x   =  swapValues (snd $ PQ.findMax x) 0 xs
+            gn xs   =  map (fromCoordinates xs) $ getNeighbors xs
+            cln     =  PQ.filter (\x -> ((swapValues x 0 xs) `notElem` cs) && (x `elem` (gn xs))) os
+            nxt     =  nn (swp cln) d cln
