@@ -9,6 +9,12 @@ import Solver.Solver
 import Logger
 import Parser
 
+defaultSearch :: SearchType
+defaultSearch = Astar
+
+defaultHeuristic :: Distance
+defaultHeuristic = Manhattan
+
 checkArgs :: [String] -> IO ()
 checkArgs xs = case length xs of
     0 -> do
