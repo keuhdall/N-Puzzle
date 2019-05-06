@@ -3,8 +3,8 @@ module Parser (clearInput, transformInput) where
     import Data.Sort
     import Data.List.Split
 
-    import Solver.Methods
     import Solver.Distance
+    import Solver.Solver
 
     maxPuzzle :: Int
     maxPuzzle = 10
