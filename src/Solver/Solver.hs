@@ -36,7 +36,7 @@ module Solver.Solver (SearchType(..), solve) where
     runSearch :: [[Int]] -> PQ.MaxPQueue Int Int -> [[Int]] -> SearchType -> Distance -> Int -> IO ()
     runSearch xss os cs st d n
         | xs == getSolvedGrid (getPuzzleSize xs) = displayGrid xs >> putStrLn ("Solved in " ++ (show n) ++ " steps.")
-        | cln == PQ.empty && os /= PQ.empty = runSearch (tail xss) os (xs:cs) st d (n+1)
+        | cln == PQ.empty && os /= PQ.empty = displayGrid xs >> runSearch (tail xss) os (xs:cs) st d (n+1)
         | cln == PQ.empty = putErr E.NotSolvable
         | otherwise = displayGrid xs >> (runSearch ((swp cln):xss) nxt (xs:cs) st d (n+1)) where
             xs      =  head xss
