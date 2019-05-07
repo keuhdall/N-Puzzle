@@ -26,10 +26,3 @@ module Parser (clearInput, transformInput) where
     transformInput xss
         | all isDigit (concat $ concat xss) == False = Nothing
         | otherwise = let xss' = map (\xs -> map read xs) xss in if (isValidSize xss' && hasValidContent xss') then Just (xss') else Nothing
-
-    -- Returns a SearchType or a SearchType and a Distance if they have been provided as arguments
-    handleArgs :: [String] -> (Maybe SearchType, Maybe Distance)
-    handleArgs xs = case (length xs) of
-        2       -> (Just (read $ xs !! 1), Nothing)
-        3       -> (Just (read $ xs !! 1), Just (read $ xs !! 2))
-        _       -> (Nothing, Nothing)
