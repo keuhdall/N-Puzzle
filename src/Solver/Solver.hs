@@ -14,16 +14,18 @@ module Solver.Solver (SearchType(..), solve) where
         show Uniform    = "Uniform cost"
         show Greedy     = "Greedy"
 
+    -- Function that returns the cost of a node according to the SearchType currently used
     getCost :: SearchType -> DistFunc -> [[Int]] -> (Int, Int) -> Int
     getCost st d xss coord =
         let xs    =  head xss
             svd   =  getSolvedGrid $ getPuzzleSize xs
             val   =  fromCoordinates xs coord
             dist  =  d (getCoordinates svd val) coord in case st of
-            Astar     -> dist + (length xss)
-            Uniform   -> (length xss)
-            Greedy    -> dist
+            Astar     -> dist + (length xss)    -- A* : h cost + g cost
+            Uniform   -> (length xss)           -- Uniform : g cost only
+            Greedy    -> dist                   -- Greedy : h cost only
 
+    -- Function that returns a PQueue containing the next nodes (value + cost)
     getNextNodes :: [[Int]] -> [Int] -> SearchType -> Distance -> PQ.MaxPQueue Int Int -> PQ.MaxPQueue Int Int
     getNextNodes xss xs st d pq = getNextNodes' (getNeighbors xs) pq where
         svd   = getSolvedGrid $ getPuzzleSize xs
