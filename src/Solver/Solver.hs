@@ -42,9 +42,7 @@ module Solver.Solver (SearchType(..), solve) where
         | xs == getSolvedGrid (getPuzzleSize xs) = displayGrid xs >> putStrLn ("Solved in " ++ (show n) ++ " steps.")
         | cln == PQ.empty && os /= PQ.empty = displayGrid xs >> runSearch (tail xss) os (xs:cs) st nn (n+1)
         | cln == PQ.empty = putErr E.NotSolvable
-        | otherwise = do
-            displayGrid xs
-            runSearch ((swapValues (snd max) xs):xss) os' (xs:cs) st nn (n+1) where
+        | otherwise = displayGrid xs >> runSearch ((swapValues (snd max) xs):xss) os' (xs:cs) st nn (n+1) where
                 xs  = head xss
                 gn  = map (fromCoordinates xs) $ getNeighbors xs
                 cln = PQ.filter ((flip elem) gn) $ PQ.union (nn st xss cs) os
