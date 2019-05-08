@@ -49,5 +49,5 @@ module Solver.Grid where
         (a,b)                         -> [(a,b-1),(a,b+1),(a-1,b),(a+1,b)]
 
     -- Swap 2 values from a list
-    swapValues :: Eq a => a -> a -> ([a] -> [a])
-    swapValues a b = map (\x -> if x == a then b else if x == b then a else x)
+    swapValues :: Int -> ([Int] -> [Int])
+    swapValues a = map (\x -> if x == a then 0 else if x == 0 then a else x)

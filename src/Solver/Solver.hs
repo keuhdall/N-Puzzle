@@ -8,13 +8,14 @@ module Solver.Solver (SearchType(..), solve) where
 
     data SearchType = Astar | Uniform | Greedy deriving Eq
     type DistFunc = (Int, Int) -> (Int, Int) -> Int
+    type NextNodesFunc = SearchType -> [[Int]] -> [[Int]] -> PQ.MaxPQueue Int Int
 
     instance Show SearchType where
         show Astar      = "A*"
         show Uniform    = "Uniform cost"
         show Greedy     = "Greedy"
 
-    -- Function that returns the cost of a node according to the SearchType currently used
+    -- Returns the cost of a node according to the SearchType currently used
     getCost :: SearchType -> DistFunc -> [[Int]] -> (Int, Int) -> Int
     getCost st d xss coord =
         let xs    =  head xss
@@ -25,27 +26,30 @@ module Solver.Solver (SearchType(..), solve) where
             Uniform   -> (length xss)           -- Uniform : g cost only
             Greedy    -> dist                   -- Greedy : h cost only
 
-    -- Function that returns a PQueue containing the next nodes (value + cost)
-    getNextNodes :: [[Int]] -> [Int] -> SearchType -> Distance -> PQ.MaxPQueue Int Int -> PQ.MaxPQueue Int Int
-    getNextNodes xss xs st d pq = getNextNodes' (getNeighbors xs) pq where
+    -- Returns a PQueue containing the next nodes (value + cost)
+    getNextNodes :: Distance -> SearchType -> [[Int]] -> [[Int]] -> PQ.MaxPQueue Int Int
+    getNextNodes d st xss cs = getNextNodes' (getNeighbors xs) PQ.empty where
+        xs    = head xss
         svd   = getSolvedGrid $ getPuzzleSize xs
         dist  = getDistance d
         cost  = getCost st dist xss
         value = fromCoordinates xs
-        getNextNodes' (y:[]) pq = PQ.insert (cost y) (value y) pq
+        getNextNodes' (y:[]) pq = PQ.filter (\x -> (swapValues x xs) `notElem` cs) $ PQ.insert (cost y) (value y) pq
         getNextNodes' (y:ys) pq = getNextNodes' ys (PQ.insert (cost y) (value y) pq)
 
-    runSearch :: [[Int]] -> PQ.MaxPQueue Int Int -> [[Int]] -> SearchType -> Distance -> Int -> IO ()
-    runSearch xss os cs st d n
+    runSearch :: [[Int]] -> PQ.MaxPQueue Int Int -> [[Int]] -> SearchType -> NextNodesFunc -> Int -> IO ()
+    runSearch xss os cs st nn n
         | xs == getSolvedGrid (getPuzzleSize xs) = displayGrid xs >> putStrLn ("Solved in " ++ (show n) ++ " steps.")
-        | cln == PQ.empty && os /= PQ.empty = displayGrid xs >> runSearch (tail xss) os (xs:cs) st d (n+1)
+        | cln == PQ.empty && os /= PQ.empty = displayGrid xs >> runSearch (tail xss) os (xs:cs) st nn (n+1)
         | cln == PQ.empty = putErr E.NotSolvable
-        | otherwise = displayGrid xs >> (runSearch ((swp cln):xss) nxt (xs:cs) st d (n+1)) where
-            xs      =  head xss
-            swp x   =  swapValues (snd $ PQ.findMax x) 0 xs
-            gn xs   =  map (fromCoordinates xs) $ getNeighbors xs
-            cln     =  PQ.filter (\x -> ((swapValues x 0 xs) `notElem` cs) && (x `elem` (gn xs))) os
-            nxt     =  getNextNodes xss (swp cln) st d os
+        | otherwise = do
+            displayGrid xs
+            runSearch ((swapValues (snd max) xs):xss) os' (xs:cs) st nn (n+1) where
+                xs  = head xss
+                gn  = map (fromCoordinates xs) $ getNeighbors xs
+                cln = PQ.filter ((flip elem) gn) $ PQ.union (nn st xss cs) os
+                max = PQ.findMax cln
+                os' = PQ.filterWithKey (\x y -> (x /= (fst max) && y /= (snd max))) $ PQ.union (nn st xss cs) os
 
     solve :: [Int] -> SearchType -> Distance -> IO ()
-    solve xs st d = runSearch [xs] (getNextNodes [xs] xs st d PQ.empty) [] st d 0
+    solve xs st d = let nn = getNextNodes d in runSearch [xs] PQ.empty [] st nn 0
