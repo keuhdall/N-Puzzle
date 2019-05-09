@@ -40,7 +40,7 @@ module Solver.Solver (SearchType(..), solve) where
     -- Runs the search using a given SearchType. The SearchType will be used in nodes cost computation
     runSearch :: [[Int]] -> PQ.MaxPQueue Int Int -> [[Int]] -> SearchType -> NextNodesFunc -> Int -> IO ()
     runSearch xss os cs st nn n
-        | xs == getSolvedGrid (getPuzzleSize xs) = displayGrid xs >> putStrLn ("Solved in " ++ (show n) ++ " steps.")
+        | isSolved xs = displayGrid xs >> putStrLn ("Solved in " ++ (show n) ++ " steps.")
         | cln == PQ.empty && os /= PQ.empty = displayGrid xs >> runSearch (tail xss) os (xs:cs) st nn (n+1)
         | cln == PQ.empty = putErr E.NotSolvable
         | otherwise = displayGrid xs >> runSearch ((swapValues (snd max) xs):xss) os' (xs:cs) st nn (n+1) where
