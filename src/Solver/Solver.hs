@@ -47,7 +47,7 @@ module Solver.Solver (SearchType(..), solve) where
                 gn  = map (fromCoordinates xs) $ getNeighbors xs
                 cln = PQ.filter ((flip elem) gn) $ PQ.union (nn st xss cs) os
                 max = PQ.findMax cln
-                os' = PQ.filterWithKey (\x y -> (x /= (fst max) && y /= (snd max))) $ PQ.union (nn st xss cs) os
+                os' = PQ.filterWithKey (\x y -> (x /= (fst max) || y /= (snd max))) $ PQ.union (nn st xss cs) os
 
     solve :: [Int] -> SearchType -> Distance -> IO ()
     solve xs st d = let nn = getNextNodes d in runSearch [xs] PQ.empty [] st nn 0
