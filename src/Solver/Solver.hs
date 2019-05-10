@@ -29,7 +29,7 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
         let xs    =  head xss
             svd   =  getSolvedGrid $ getPuzzleSize xs
             val   =  fromCoordinates xs coord
-            dist  =  d (getCoordinates svd val) coord in case st of
+            dist  =  d coord (getCoordinates svd val) in case st of
             Astar     -> dist + (length xss)    -- A* : h cost + g cost
             Uniform   -> (length xss)           -- Uniform : g cost only
             Greedy    -> dist                   -- Greedy : h cost only
