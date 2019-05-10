@@ -38,9 +38,7 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
     getNextNodes :: Distance -> SearchType -> [[Int]] -> [[Int]] -> PQ.MaxPQueue Int Int
     getNextNodes d st xss cs = getNextNodes' (getNeighbors xs) PQ.empty where
         xs    = head xss
-        svd   = getSolvedGrid $ getPuzzleSize xs
-        dist  = getDistance d
-        cost  = getCost st dist xss
+        cost  = getCost st (getDistance d) xss
         value = fromCoordinates xs
         getNextNodes' (y:[]) pq = PQ.filter (\x -> (swapValues x xs) `notElem` cs) $ PQ.insert (cost y) (value y) pq
         getNextNodes' (y:ys) pq = getNextNodes' ys (PQ.insert (cost y) (value y) pq)
