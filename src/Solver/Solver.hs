@@ -59,7 +59,7 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
             os' = PQ.filterWithKey (\x y -> (x /= (fst max) || y /= (snd max))) $ PQ.union (nn st xss cs) os -- New open set
 
     solve :: [Int] -> (Maybe SearchType, Maybe Distance) -> IO ()
-    solve xs (Nothing, Nothing) = let nn = getNextNodes Manhattan in putStrLn ("Solving grid using the Astar algorihtm and the Manhattan distance") >> runSearch [xs] PQ.empty [] Astar nn 0
-    solve xs (Just st, Nothing) = let nn = getNextNodes Manhattan in putStrLn ("Solving grid using the " ++ (show st) ++ " algorihtm and the Manhattan distance") >> runSearch [xs] PQ.empty [] st nn 0
-    solve xs (Nothing, Just d)  = let nn = getNextNodes d in putStrLn ("Solving grid using the Astar algorihtm and the " ++ (show d) ++ " distance") >> runSearch [xs] PQ.empty [] Astar nn 0
-    solve xs (Just st, Just d)  = let nn = getNextNodes d in putStrLn ("Solving grid using the " ++ (show st) ++ " algorihtm and the " ++ (show d) ++ " distance") >> runSearch [xs] PQ.empty [] st nn 0
+    solve xs (Nothing, Nothing) = putStrLn ("Solving grid using the Astar algorihtm and the Manhattan distance") >> runSearch [xs] PQ.empty [] Astar (getNextNodes Manhattan) 0
+    solve xs (Just st, Nothing) = putStrLn ("Solving grid using the " ++ (show st) ++ " algorihtm and the Manhattan distance") >> runSearch [xs] PQ.empty [] st (getNextNodes Manhattan) 0
+    solve xs (Nothing, Just d)  = putStrLn ("Solving grid using the Astar algorihtm and the " ++ (show d) ++ " distance") >> runSearch [xs] PQ.empty [] Astar (getNextNodes d) 0
+    solve xs (Just st, Just d)  = putStrLn ("Solving grid using the " ++ (show st) ++ " algorihtm and the " ++ (show d) ++ " distance") >> runSearch [xs] PQ.empty [] st (getNextNodes d) 0
