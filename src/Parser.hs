@@ -1,13 +1,14 @@
-module Parser (clearInput, transformInput) where
+module Parser (clearInput, transformInput, parseArgs) where
     import Data.Char
     import Data.Sort
     import Data.List.Split
+    import Text.Read
 
     import Solver.Distance
     import Solver.Solver
 
     maxPuzzle :: Int
-    maxPuzzle = 10
+    maxPuzzle = 5
 
     -- Strips comments and empty lines
     clearInput :: [String] -> [String]
@@ -26,3 +27,9 @@ module Parser (clearInput, transformInput) where
     transformInput xss
         | all isDigit (concat $ concat xss) == False = Nothing
         | otherwise = let xss' = map (\xs -> map read xs) xss in if (isValidSize xss' && hasValidContent xss') then Just (xss') else Nothing
+
+    parseArgs :: [String] -> (Maybe SearchType, Maybe Distance)
+    parseArgs xs = case length xs of
+        1   -> (Nothing, Nothing)
+        2   -> (readSearchType (xs !! 1), Nothing)
+        _   -> (readSearchType (xs !! 1), readDistance (xs !! 2)) where

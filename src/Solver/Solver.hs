@@ -1,4 +1,4 @@
-module Solver.Solver (SearchType(..), solve) where
+module Solver.Solver (SearchType(..), readSearchType, solve) where
     import Data.Sort
     import qualified Data.PQueue.Prio.Max as PQ
     import qualified Error as E
@@ -14,6 +14,14 @@ module Solver.Solver (SearchType(..), solve) where
         show Astar      = "A*"
         show Uniform    = "Uniform cost"
         show Greedy     = "Greedy"
+
+    readSearchType :: String -> Maybe SearchType
+    readSearchType s = case s of
+        "astar"     -> Just Astar
+        "uniform"   -> Just Uniform
+        "greedy"    -> Just Greedy
+        _           -> Nothing
+
 
     -- Returns the cost of a node according to the SearchType currently used
     getCost :: SearchType -> DistFunc -> [[Int]] -> (Int, Int) -> Int
@@ -50,5 +58,8 @@ module Solver.Solver (SearchType(..), solve) where
                 max = PQ.findMax cln                                                                                -- Maximum value retrieved from the neighbors drawed from the PQueue
                 os' = PQ.filterWithKey (\x y -> (x /= (fst max) || y /= (snd max))) $ PQ.union (nn st xss cs) os    -- New open set
 
-    solve :: [Int] -> SearchType -> Distance -> IO ()
-    solve xs st d = let nn = getNextNodes d in runSearch [xs] PQ.empty [] st nn 0
+    solve :: [Int] -> (Maybe SearchType, Maybe Distance) -> IO ()
+    solve xs (Nothing, Nothing) = let nn = getNextNodes Manhattan in putStrLn ("Solving grid using the Astar algorihtm and the Manhattan distance") >> runSearch [xs] PQ.empty [] Astar nn 0
+    solve xs (Just st, Nothing) = let nn = getNextNodes Manhattan in putStrLn ("Solving grid using the " ++ (show st) ++ " algorihtm and the Manhattan distance") >> runSearch [xs] PQ.empty [] st nn 0
+    solve xs (Nothing, Just d)  = let nn = getNextNodes d in putStrLn ("Solving grid using the Astar algorihtm and the " ++ (show d) ++ " distance") >> runSearch [xs] PQ.empty [] Astar nn 0
+    solve xs (Just st, Just d)  = let nn = getNextNodes d in putStrLn ("Solving grid using the " ++ (show st) ++ " algorihtm and the " ++ (show d) ++ " distance") >> runSearch [xs] PQ.empty [] st nn 0
