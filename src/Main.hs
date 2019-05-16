@@ -26,5 +26,5 @@ main = do
     let w = map words $ drop 1 $ clearInput l
     let pargs = parseArgs args
     case transformInput w of
-        Just w' -> solve (concat w') pargs
+        Just grid -> solve grid pargs
         Nothing -> putErr E.InvalidInput

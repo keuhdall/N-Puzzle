@@ -1,7 +1,14 @@
 module Solver.Grid where
+    import Prelude hiding (Left, Right)
+    import Data.Maybe
+    import Data.List
+    import Data.Array
+
+    data Move = Up | Down | Left | Right deriving Eq
+    type Grid = Array Int (Int, Int)
 
     -- Returns a solved grid of the given size
-    getSolvedGrid :: Int -> [Int]
+    getSolvedGrid :: Int -> [Int] -- ok
     getSolvedGrid n = let xs = replicate (n^2) (-1) in getSolvedGrid' xs 1 0 1 0 0 where
         getSolvedGrid' xs' cur x ix y iy
             | cur == n^2 = replace xs' 0 (x+y*n)
@@ -13,41 +20,26 @@ module Solver.Grid where
             | n == 0    = x':xs
             | otherwise = x:replace xs x' (n-1)
 
-    getPuzzleSize :: [a] -> Int
-    getPuzzleSize xs = floor . sqrt . fromIntegral $ length xs
+    getPuzzleSize :: Grid -> Int -- ok
+    getPuzzleSize grid = floor . sqrt . fromIntegral $ length grid
 
-    isSolved :: [Int] -> Bool
-    isSolved xs = let size = getPuzzleSize xs in xs == getSolvedGrid size
-
-    -- Returns the given list with indexes assotiated to each value : [(index, value)]
-    getIndexes :: [Int] -> [(Int, Int)]
-    getIndexes xs = let len = (length xs) - 1 in zip [0..len] xs
-
-    -- Returns the coordinates of the given value in the list
-    getCoordinates :: [Int] -> Int -> (Int, Int)
-    getCoordinates xs n =
-        let size = getPuzzleSize xs;
-            x' = fst . head $ filter (\x -> snd x == n) $ getIndexes xs;
-            x = x' `mod` size;
-            y = x' `div` size in (x, y)
-
-    -- Returns the value associated to the given coordinates in the puzzle
-    fromCoordinates :: [Int] -> (Int, Int) -> Int
-    fromCoordinates xs (a,b) = let size = getPuzzleSize xs in xs !! (size*b+a)
+    isSolved :: Grid -> Bool -- ok
+    isSolved grid = let size = getPuzzleSize grid; xs = map fst $ assocs grid in xs == getSolvedGrid size
 
     -- Returns a list of coordinates which are the coordinates of the neighbors of the `0` value in the puzzle
-    getNeighbors :: [Int] -> [(Int, Int)]
-    getNeighbors xs = let max = (getPuzzleSize xs)-1 in case (getCoordinates xs 0) of
-        (0,0)                         -> [(0,1),(1,0)]
-        (a,b) | a == max && b == max  -> [(max-1,max),(max,max-1)]
-        (0,b) | b == max              -> [(0,b-1),(1,b)]
-        (a,0) | a == max              -> [(a,1),(a-1,0)]
-        (a,b) | b == max              -> [(a,b-1),(a-1,b),(a+1,b)]
-        (a,b) | a == max              -> [(a-1,b),(a,b-1),(a,b+1)]
-        (a,0)                         -> [(a,1),(a-1,0),(a+1,0)]
-        (0,b)                         -> [(1,b),(0,b-1),(0,b+1)]
-        (a,b)                         -> [(a,b-1),(a,b+1),(a-1,b),(a+1,b)]
+    getNeighbors :: Grid -> [Grid]
+    getNeighbors grid = map fromJust $ filter (/= Nothing) $ [Up, Down, Left, Right] >>= (\x -> [updateGrid grid x])
 
     -- Swap 2 values from a list
-    swapValues :: Int -> ([Int] -> [Int])
-    swapValues a = map (\x -> if x == a then 0 else if x == 0 then a else x)
+    updateGrid :: Grid -> Move -> Maybe Grid
+    updateGrid grid pos = if null ind then Nothing else Just $ grid//[(0, newCoord), ((fst $ head ind), grid!0)] where
+        size = getPuzzleSize grid - 1
+        newCoord = moveTile (grid!0) pos
+        ind = filter (\x -> snd x == newCoord) $ assocs grid
+
+    moveTile :: (Int, Int) -> Move -> (Int, Int)
+    moveTile (x, y) pos = case pos of
+        Up      -> (x, y-1)
+        Down    -> (x, y+1)
+        Left    -> (x-1, y)
+        Right   -> (x+1, y)

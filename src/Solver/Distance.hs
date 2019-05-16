@@ -5,6 +5,8 @@ module Solver.Distance (Distance(..), readDistance, getDistance) where
     manhattanDistance :: (Int, Int) -> (Int, Int) -> Int
     manhattanDistance x y = abs (fst x - fst y) + abs (snd x - snd y)
 
+    manhattanDistance xs ys = let size = (length xs) - 1 in [ | x <- [0..size], y <- [0..size]]
+
     diagonalDistance :: (Int, Int) -> (Int, Int) -> Int
     diagonalDistance x y = let x' = (abs $ fst x - fst y); y' = (abs $ snd x - snd y) in max x' y'
 

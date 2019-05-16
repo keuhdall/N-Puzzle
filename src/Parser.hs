@@ -2,8 +2,10 @@ module Parser (clearInput, transformInput, parseArgs) where
     import Data.Char
     import Data.Sort
     import Data.List.Split
+    import Data.Array
     import Text.Read
 
+    import Solver.Grid
     import Solver.Distance
     import Solver.Solver
 
@@ -20,13 +22,16 @@ module Parser (clearInput, transformInput, parseArgs) where
 
     -- Sorts input and compare it to an enum list of the same size
     hasValidContent :: [[Int]] -> Bool
-    hasValidContent xss = let n = (length xs) - 1; xs = concat xss; ys = [0..n] in (sort xs) == ys
+    hasValidContent xss = let n = length xs - 1; xs = concat xss; ys = [0..n] in (sort xs) == ys
+
+    toArray :: [[Int]] -> Grid
+    toArray xss = let xs = concat xss; size = (length $ head xss)-1; size' = length xs - 1 in array (0,size') (zip xs [(x,y) | x <- [0..size], y <- [0..size]])
 
     -- Returns the input as [[Int]] if it is valid, otherwise returns Nothing
-    transformInput :: [[String]] -> Maybe [[Int]]
+    transformInput :: [[String]] -> Maybe Grid
     transformInput xss
         | all isDigit (concat $ concat xss) == False = Nothing
-        | otherwise = let xss' = map (\xs -> map read xs) xss in if (isValidSize xss' && hasValidContent xss') then Just (xss') else Nothing
+        | otherwise = let xss' = map (\xs -> map read xs) xss in if (isValidSize xss' && hasValidContent xss') then Just toArray xss' else Nothing
 
     parseArgs :: [String] -> (Maybe SearchType, Maybe Distance)
     parseArgs xs = case length xs of
