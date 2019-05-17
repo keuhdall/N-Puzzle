@@ -9,7 +9,7 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
 
     data SearchType = Astar | Uniform | Greedy deriving Eq
     type DistFunc = (Int, Int) -> (Int, Int) -> Int
-    type NextNodesFunc = [[Int]] -> S.Set [Int] -> PQ.MaxPQueue Int [[Int]]
+    type NextNodesFunc = [Grid] -> S.Set Grid -> PQ.MaxPQueue Int [Grid]
 
     instance Show SearchType where
         show Astar      = "A*"
@@ -24,7 +24,7 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
         _           -> Nothing
 
     -- Returns the cost of a node according to the SearchType currently used
-    getCost :: SearchType -> DistFunc -> [[Int]] -> (Int, Int) -> Int
+    getCost :: SearchType -> DistFunc -> [Grid] -> (Int, Int) -> Int
     getCost st d xss coord =
         let xs    =  head xss
             svd   =  getSolvedGrid $ getPuzzleSize xs
@@ -35,7 +35,7 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
             Greedy    -> dist                   -- Greedy : h cost only
 
     -- Returns a PQueue containing the next nodes (value + cost)
-    getNextNodes :: Distance -> SearchType -> [[Int]] -> S.Set [Int] -> PQ.MaxPQueue Int [[Int]]
+    getNextNodes :: Distance -> SearchType -> [Grid] -> S.Set Grid -> PQ.MaxPQueue Int [Grid]
     getNextNodes d st xss cs = getNextNodes' (getNeighbors xs) PQ.empty where
         xs    = head xss
         cost  = getCost st (getDistance d) xss
@@ -44,7 +44,7 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
         getNextNodes' (y:ys) pq = getNextNodes' ys (PQ.insert (cost y) (value y) pq)
 
     -- Runs the search using a given SearchType. The SearchType will be used in nodes cost computation
-    runSearch :: [[Int]] -> PQ.MaxPQueue Int [[Int]] -> S.Set [Int] -> NextNodesFunc -> Int -> IO ()
+    runSearch :: [Grid] -> PQ.MaxPQueue Int [Grid] -> S.Set Grid -> NextNodesFunc -> Int -> IO ()
     runSearch xss os cs nn n
         | isSolved xs = displayGrid xs >> putStrLn ("Solved in " ++ (show n) ++ " steps.")
         | suc /= PQ.empty                                       = runSearch ((max suc):xss)   (PQ.union os $ PQ.deleteMax suc)                cs' nn (n+1)
@@ -57,7 +57,7 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
             max x   = head . snd $ PQ.findMax x
             cs'     = S.insert xs cs
 
-    solve :: [Int] -> (Maybe SearchType, Maybe Distance) -> IO ()
+    solve :: Grid -> (Maybe SearchType, Maybe Distance) -> IO ()
     solve xs (Nothing, Nothing) = putStrLn ("Solving grid using the Astar algorihtm and the Manhattan distance")                        >> runSearch  [xs]  PQ.empty  S.empty  ( getNextNodes Manhattan Astar  )  0
     solve xs (Just st, Nothing) = putStrLn ("Solving grid using the " ++ (show st) ++ " algorihtm and the Manhattan distance")          >> runSearch  [xs]  PQ.empty  S.empty  ( getNextNodes Manhattan st     )  0
     solve xs (Nothing, Just d)  = putStrLn ("Solving grid using the Astar algorihtm and the " ++ (show d) ++ " distance")               >> runSearch  [xs]  PQ.empty  S.empty  ( getNextNodes d         Astar  )  0
