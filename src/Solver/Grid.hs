@@ -1,4 +1,9 @@
 module Solver.Grid where
+    import Prelude hiding (Left, Right)
+    import Data.Maybe
+
+    data Move = Up | Down | Left | Right deriving Eq
+    type Grid = [[Int]]
 
     -- Returns a solved grid of the given size
     getSolvedGrid :: Int -> [Int]
@@ -13,41 +18,48 @@ module Solver.Grid where
             | n == 0    = x':xs
             | otherwise = x:replace xs x' (n-1)
 
-    getPuzzleSize :: [a] -> Int
-    getPuzzleSize xs = floor . sqrt . fromIntegral $ length xs
+    chunkList :: Int -> [Int] -> Grid
+    chunkList n [] = []
+    chunkList n xs = (take n xs) : (chunkList n (drop n xs))
 
-    isSolved :: [Int] -> Bool
-    isSolved xs = let size = getPuzzleSize xs in xs == getSolvedGrid size
+    getPuzzleSize :: Grid -> Int
+    getPuzzleSize grid = length $ head grid
+
+    isSolved :: Grid -> Bool
+    isSolved grid = let size = getPuzzleSize grid in concat grid == getSolvedGrid size
 
     -- Returns the given list with indexes assotiated to each value : [(index, value)]
-    getIndexes :: [Int] -> [(Int, Int)]
-    getIndexes xs = let len = (length xs) - 1 in zip [0..len] xs
-
-    -- Returns the coordinates of the given value in the list
-    getCoordinates :: [Int] -> Int -> (Int, Int)
-    getCoordinates xs n =
-        let size = getPuzzleSize xs;
-            x' = fst . head $ filter (\x -> snd x == n) $ getIndexes xs;
-            x = x' `mod` size;
-            y = x' `div` size in (x, y)
+    getIndexes :: Grid -> [(Int, (Int, Int))]
+    getIndexes grid = let size = (getPuzzleSize grid) - 1 in zip (concat grid) [(x,y) | x <- [0..size], y <- [0..size]]
 
     -- Returns the value associated to the given coordinates in the puzzle
-    fromCoordinates :: [Int] -> (Int, Int) -> Int
-    fromCoordinates xs (a,b) = let size = getPuzzleSize xs in xs !! (size*b+a)
+    fromCoordinates :: Grid -> (Int, Int) -> Int
+    fromCoordinates grid (x,y) = ((grid !! y) !! x)
 
     -- Returns a list of coordinates which are the coordinates of the neighbors of the `0` value in the puzzle
-    getNeighbors :: [Int] -> [(Int, Int)]
-    getNeighbors xs = let max = (getPuzzleSize xs)-1 in case (getCoordinates xs 0) of
-        (0,0)                         -> [(0,1),(1,0)]
-        (a,b) | a == max && b == max  -> [(max-1,max),(max,max-1)]
-        (0,b) | b == max              -> [(0,b-1),(1,b)]
-        (a,0) | a == max              -> [(a,1),(a-1,0)]
-        (a,b) | b == max              -> [(a,b-1),(a-1,b),(a+1,b)]
-        (a,b) | a == max              -> [(a-1,b),(a,b-1),(a,b+1)]
-        (a,0)                         -> [(a,1),(a-1,0),(a+1,0)]
-        (0,b)                         -> [(1,b),(0,b-1),(0,b+1)]
-        (a,b)                         -> [(a,b-1),(a,b+1),(a-1,b),(a+1,b)]
+    getNeighbors :: Grid -> [Grid]
+    getNeighbors grid = map fromJust $ filter (/= Nothing) $ [Up, Down, Left, Right] >>= (\x -> [updateGrid grid x]) 
 
-    -- Swap 2 values from a list
-    swapValues :: Int -> ([Int] -> [Int])
-    swapValues a = map (\x -> if x == a then 0 else if x == 0 then a else x)
+    -- Returns the coordinates of the zero in a given grid
+    getZero :: Grid -> (Int, Int)
+    getZero grid = let size = (getPuzzleSize grid) - 1 in head $ filter (/=(-1,-1)) [if ((grid !! y) !! x) == 0 then (x,y) else (-1,-1) | x <- [0..size], y <- [0..size]]
+
+    -- Get the new coordinates of the zero value
+    moveZero :: Move -> (Int, Int) -> (Int, Int)
+    moveZero move (x,y) = case move of
+        Up      -> (x,y-1)
+        Down    -> (x,y+1)
+        Left    -> (x-1,y)
+        Right   -> (x+1,y)
+
+    -- Tries to update a grid with a given move, returns Just Grid if it succeeds, Nothing if it fails
+    updateGrid :: Grid -> Move -> Maybe Grid
+    updateGrid grid move = if checkPos newPos == False then Nothing else Just $ swapValues grid pos newPos where
+        size = getPuzzleSize grid - 1
+        pos = getZero grid
+        newPos = moveZero move pos
+        checkPos (x, y) = if x < 0 || x > size || y < 0 || y > size then False else True
+
+    -- Swap 2 values from a grid
+    swapValues :: Grid -> (Int, Int) -> (Int, Int) -> Grid
+    swapValues grid (x,y) (x',y') = let size = getPuzzleSize grid - 1 in chunkList size $ map (\(a,b) -> if (a,b) == (x,y) then ((grid !! y') !! x') else if (a,b) == (x',y') then ((grid !! y) !! x) else ((grid !! b) !! a)) [(x,y) | x <- [0..size], y <- [0..size]]

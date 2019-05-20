@@ -16,13 +16,8 @@ module Logger (displayHelp, displayGrid, putErr) where
     \ - euclidian \n \
     \ - hamming \n"
 
-    chunkList :: [Int] -> [[Int]]
-    chunkList xs = let size = getPuzzleSize xs in chunkList' size xs where
-        chunkList' n [] = []
-        chunkList' n xs = (take n xs) : (chunkList' n (drop n xs))
-
-    displayGrid :: [Int] -> IO ()
-    displayGrid xs = let xss = chunkList xs; size = getPuzzleSize xs in mapM_ (\xs -> putStrLn . concat . map (++" ") $ map show xs) xss >> (putStrLn $ replicate (2 * size - 1) '-')
+    displayGrid :: Grid -> IO ()
+    displayGrid grid = let size = getPuzzleSize grid in mapM_ (\xs -> putStrLn . concat . map (++" ") $ map show xs) grid >> (putStrLn $ replicate (2 * size - 1) '-')
 
     putErr :: Error -> IO ()
     putErr e = putStrLn $ show e
