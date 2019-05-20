@@ -8,7 +8,7 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
     import Solver.Distance
 
     data SearchType = Astar | Uniform | Greedy deriving Eq
-    type NextNodesFunc = [Grid] -> S.Set Grid -> PQ.MinPQueue Int [Grid]
+    type NextNodesFunc = [Grid] -> S.Set Grid -> PQ.MinPQueue Int Grid
 
     instance Show SearchType where
         show Astar      = "A*"
@@ -24,17 +24,19 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
 
     -- Returns the cost of a node according to the SearchType currently used
     getCost :: SearchType -> Distance -> [Grid] -> Grid -> Grid -> Int
-    getCost st d xss grid goal = let dist = calcDistance grid goal in case st of
-            Astar     -> dist + (length xss)    -- A* : h cost + g cost
-            Uniform   -> (length xss)           -- Uniform : g cost only
-            Greedy    -> dist                   -- Greedy : h cost only
+    getCost st d xss grid goal = let dist = calcDistance d grid goal in case st of
+        Astar     -> dist + (length xss)    -- A* : h cost + g cost
+        Uniform   -> (length xss)           -- Uniform : g cost only
+        Greedy    -> dist                   -- Greedy : h cost only
 
     -- Returns a PQueue containing the next nodes (value + cost)
-    getNextNodes :: Distance -> SearchType -> [Grid] -> Grid -> PQ.MinPQueue Int [Grid]
-    getNextNodes d st xss goal = map (getCost st d xss goal) $ getNeighbors $ head xss
+    getNextNodes :: Distance -> SearchType -> [Grid] -> Grid -> PQ.MinPQueue Int Grid
+    getNextNodes d st xss goal = PQ.fromList $ zip costs neighbors where
+        costs = map (getCost st d xss goal) neighbors
+        neighbors = getNeighbors $ head xss
 
     -- Runs the search using a given SearchType. The SearchType will be used in nodes cost computation
-    runSearch :: [Grid] -> PQ.MinPQueue Int [Grid] -> S.Set Grid -> NextNodesFunc -> Int -> IO ()
+    runSearch :: [Grid] -> PQ.MinPQueue Int Grid -> S.Set Grid -> NextNodesFunc -> Int -> IO ()
     runSearch xss os cs nn n
         | isSolved xs = displayGrid xs >> putStrLn ("Solved in " ++ (show n) ++ " steps.")
         | suc /= PQ.empty                                       = runSearch ((max suc):xss)   (PQ.union os $ PQ.deleteMin suc)                cs' nn (n+1)
