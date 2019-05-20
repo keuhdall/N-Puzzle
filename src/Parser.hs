@@ -32,4 +32,4 @@ module Parser (clearInput, transformInput, parseArgs) where
     parseArgs xs = case length xs of
         1   -> (Nothing, Nothing)
         2   -> (readSearchType (xs !! 1), Nothing)
-        _   -> (readSearchType (xs !! 1), readDistance (xs !! 2)) where
+        _   -> (readSearchType (xs !! 1), readDistance (xs !! 2))

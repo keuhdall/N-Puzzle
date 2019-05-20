@@ -36,13 +36,16 @@ module Solver.Grid where
     fromCoordinates :: Grid -> (Int, Int) -> Int
     fromCoordinates grid (x,y) = ((grid !! y) !! x)
 
+    getCoordinates :: Grid -> Int -> (Int, Int)
+    getCoordinates grid n = let size = getPuzzleSize grid - 1 in head $ filter(/=(-1,-1)) [if ((grid !! y) !! x) == n then (x,y) else (-1,-1) | x <- [0..size], y <- [0..size]]
+
     -- Returns a list of coordinates which are the coordinates of the neighbors of the `0` value in the puzzle
     getNeighbors :: Grid -> [Grid]
-    getNeighbors grid = map fromJust $ filter (/= Nothing) $ [Up, Down, Left, Right] >>= (\x -> [updateGrid grid x]) 
+    getNeighbors grid = map fromJust $ filter (/= Nothing) $ [Up, Down, Left, Right] >>= (\x -> [updateGrid grid x])
 
     -- Returns the coordinates of the zero in a given grid
     getZero :: Grid -> (Int, Int)
-    getZero grid = let size = (getPuzzleSize grid) - 1 in head $ filter (/=(-1,-1)) [if ((grid !! y) !! x) == 0 then (x,y) else (-1,-1) | x <- [0..size], y <- [0..size]]
+    getZero grid = getCoordinates grid 0
 
     -- Get the new coordinates of the zero value
     moveZero :: Move -> (Int, Int) -> (Int, Int)
