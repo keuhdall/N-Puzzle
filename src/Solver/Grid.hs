@@ -6,8 +6,8 @@ module Solver.Grid where
     type Grid = [[Int]]
 
     -- Returns a solved grid of the given size
-    getSolvedGrid :: Int -> [Int]
-    getSolvedGrid n = let xs = replicate (n^2) (-1) in getSolvedGrid' xs 1 0 1 0 0 where
+    getSolvedGrid :: Int -> Grid
+    getSolvedGrid n = let xs = replicate (n^2) (-1) in chunkList n $ getSolvedGrid' xs 1 0 1 0 0 where
         getSolvedGrid' xs' cur x ix y iy
             | cur == n^2 = replace xs' 0 (x+y*n)
             | (x + ix == n) || (x + ix < 0) || (ix /= 0 && (xs' !! (x+ix+y*n)) /= (-1))     = getSolvedGrid' (replace xs' cur $ x+y*n) (cur+1) x 0 (y+ix) ix
@@ -24,9 +24,6 @@ module Solver.Grid where
 
     getPuzzleSize :: Grid -> Int
     getPuzzleSize grid = length $ head grid
-
-    isSolved :: Grid -> Bool
-    isSolved grid = let size = getPuzzleSize grid in concat grid == getSolvedGrid size
 
     -- Returns the given list with indexes assotiated to each value : [(index, value)]
     getIndexes :: Grid -> [(Int, (Int, Int))]
@@ -65,4 +62,6 @@ module Solver.Grid where
 
     -- Swap 2 values from a grid
     swapValues :: Grid -> (Int, Int) -> (Int, Int) -> Grid
-    swapValues grid (x,y) (x',y') = let size = getPuzzleSize grid - 1 in chunkList size $ map (\(a,b) -> if (a,b) == (x,y) then ((grid !! y') !! x') else if (a,b) == (x',y') then ((grid !! y) !! x) else ((grid !! b) !! a)) [(x,y) | x <- [0..size], y <- [0..size]]
+    swapValues grid x y = let size = getPuzzleSize grid in chunkList size $ map (\z -> if z == a then b else if z == b then a else z) (concat grid) where
+        a = fromCoordinates grid x
+        b = fromCoordinates grid y

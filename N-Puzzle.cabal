@@ -16,6 +16,8 @@ extra-source-files:  ChangeLog.md, README.md
 cabal-version:       >=1.10
 
 executable N-Puzzle
+  ghc-options:
+    -O3
   main-is:             Main.hs
   other-modules:       Parser, Logger, Error, Solver.Distance, Solver.Solver, Solver.Grid
   -- other-extensions:

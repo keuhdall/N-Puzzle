@@ -3,6 +3,7 @@ module Main where
 import System.Environment
 import System.Exit
 import qualified Error as E
+import Solver.Grid
 import Solver.Distance
 import Solver.Solver
 import Logger
@@ -22,9 +23,7 @@ main = do
     args <- getArgs
     checkArgs args
     content <- readFile (args !! 0)
-    let l = lines content
-    let w = map words $ drop 1 $ clearInput l
-    let pargs = parseArgs args
+    let l = lines content; w = map words $ drop 1 $ clearInput l; pargs = parseArgs args
     case transformInput w of
-        Just w' -> solve (concat w') pargs
+        Just grid -> solve (getSolvedGrid $ length grid) grid pargs
         Nothing -> putErr E.InvalidInput
