@@ -38,7 +38,7 @@ module Solver.Grid where
 
     -- Returns a list of coordinates which are the coordinates of the neighbors of the `0` value in the puzzle
     getNeighbors :: Grid -> [Grid]
-    getNeighbors grid = map fromJust $ filter (/= Nothing) $ [Up, Down, Left, Right] >>= (\x -> [updateGrid grid x])
+    getNeighbors grid = map fromJust $ filter (/= Nothing) $ map (updateGrid grid) [Up, Down, Left, Right]
 
     -- Returns the coordinates of the zero in a given grid
     getZero :: Grid -> (Int, Int)
