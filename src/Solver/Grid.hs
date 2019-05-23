@@ -10,8 +10,8 @@ module Solver.Grid where
     getSolvedGrid n = let xs = replicate (n^2) (-1) in chunkList n $ getSolvedGrid' xs 1 0 1 0 0 where
         getSolvedGrid' xs' cur x ix y iy
             | cur == n^2 = replace xs' 0 (x+y*n)
-            | (x + ix == n) || (x + ix < 0) || (ix /= 0 && (xs' !! (x+ix+y*n)) /= (-1))     = getSolvedGrid' (replace xs' cur $ x+y*n) (cur+1) x 0 (y+ix) ix
-            | (y + iy == n) || (y + iy < 0) || (iy /= 0 && (xs' !! (x+(y+iy)*n)) /= (-1))   = getSolvedGrid' (replace xs' cur $ x+y*n) (cur+1) (x-iy) (-iy) y 0
+            | x + ix == n || x + ix < 0 || ix /= 0 && (xs' !! (x+ix+y*n)) /= (-1)       = getSolvedGrid' (replace xs' cur $ x+y*n) (cur+1) x 0 (y+ix) ix
+            | y + iy == n || y + iy < 0 || iy /= 0 && (xs' !! (x+(y+iy)*n)) /= (-1)     = getSolvedGrid' (replace xs' cur $ x+y*n) (cur+1) (x-iy) (-iy) y 0
             | otherwise = getSolvedGrid' (replace xs' cur $ x+y*n) (cur+1) (x+ix) ix (y+iy) iy
         replace [] _ _ = []
         replace (x:xs) x' n
@@ -25,10 +25,6 @@ module Solver.Grid where
     getPuzzleSize :: Grid -> Int
     getPuzzleSize grid = length $ head grid
 
-    -- Returns the given list with indexes assotiated to each value : [(index, value)]
-    getIndexes :: Grid -> [(Int, (Int, Int))]
-    getIndexes grid = let size = (getPuzzleSize grid) - 1 in zip (concat grid) [(x,y) | x <- [0..size], y <- [0..size]]
-
     -- Returns the value associated to the given coordinates in the puzzle
     fromCoordinates :: Grid -> (Int, Int) -> Int
     fromCoordinates grid (x,y) = ((grid !! y) !! x)
@@ -36,13 +32,13 @@ module Solver.Grid where
     getCoordinates :: Grid -> Int -> (Int, Int)
     getCoordinates grid n = let size = getPuzzleSize grid - 1 in head $ filter(/=(-1,-1)) [if ((grid !! y) !! x) == n then (x,y) else (-1,-1) | x <- [0..size], y <- [0..size]]
 
-    -- Returns a list of coordinates which are the coordinates of the neighbors of the `0` value in the puzzle
-    getNeighbors :: Grid -> [Grid]
-    getNeighbors grid = map fromJust $ filter (/= Nothing) $ map (updateGrid grid) [Up, Down, Left, Right]
-
     -- Returns the coordinates of the zero in a given grid
     getZero :: Grid -> (Int, Int)
     getZero grid = getCoordinates grid 0
+
+    -- Returns a list of coordinates which are the coordinates of the neighbors of the `0` value in the puzzle
+    getNeighbors :: Grid -> [Grid]
+    getNeighbors grid = map fromJust $ filter (/= Nothing) $ (updateGrid grid) <$> [Up, Down, Left, Right]
 
     -- Get the new coordinates of the zero value
     moveZero :: Move -> (Int, Int) -> (Int, Int)

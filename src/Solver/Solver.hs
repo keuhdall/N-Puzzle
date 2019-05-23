@@ -25,15 +25,15 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
     -- Returns the cost of a node according to the SearchType currently used
     getCost :: SearchType -> Distance -> [Grid] -> Grid -> Grid -> Int
     getCost st d xss grid goal = let dist = calcDistance d grid goal in case st of
-        Astar     -> dist + (length xss)    -- A* : h cost + g cost
-        Uniform   -> (length xss)           -- Uniform : g cost only
-        Greedy    -> dist                   -- Greedy : h cost only
+        Astar     -> dist + length xss  -- A* : h cost + g cost
+        Uniform   -> length xss         -- Uniform : g cost only
+        Greedy    -> dist               -- Greedy : h cost only
 
     -- Returns a PQueue containing the next nodes (value + cost)
     getNextNodes :: Grid -> Distance -> SearchType -> [Grid] -> PQ.MinPQueue Int [Grid]
     getNextNodes goal d st xss = PQ.fromList $ zip costs neighbors where
         costs = map (getCost st d xss goal) $ map head neighbors
-        neighbors = map (\x -> x:xss) $ getNeighbors $ head xss
+        neighbors = map (:xss) $ getNeighbors $ head xss
 
     -- Runs the search using a given SearchType. The SearchType will be used in nodes cost computation
     runSearch :: Grid -> [Grid] -> PQ.MinPQueue Int [Grid] -> S.Set Grid -> NextNodesFunc -> Int -> IO ()
