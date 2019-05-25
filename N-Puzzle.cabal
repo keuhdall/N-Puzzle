@@ -17,6 +17,7 @@ cabal-version:       >=1.10
 
 executable N-Puzzle
   ghc-options:
+    -threaded
     -O3
   main-is:             Main.hs
   other-modules:       Parser, Logger, Error, Solver.Distance, Solver.Solver, Solver.Grid
