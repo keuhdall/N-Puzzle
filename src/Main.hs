@@ -9,12 +9,6 @@ import Solver.Solver
 import Logger
 import Parser
 
-defaultSearch :: SearchType
-defaultSearch = Astar
-
-defaultHeuristic :: Distance
-defaultHeuristic = Manhattan
-
 checkArgs :: [String] -> IO ()
 checkArgs xs = if length xs == 0 then displayHelp >> exitSuccess else return ()
 

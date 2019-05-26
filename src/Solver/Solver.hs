@@ -49,8 +49,14 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
             min x   = head . snd $ PQ.findMin x
             cs'     = S.insert xs cs
 
+    defaultSearch :: SearchType
+    defaultSearch = Astar
+
+    defaultHeuristic :: Distance
+    defaultHeuristic = Manhattan
+
     solve :: Grid -> Grid -> (Maybe SearchType, Maybe Distance) -> IO ()
-    solve goal xs (Nothing, Nothing) = putStrLn ( "Solving grid using the Astar algorihtm and the Manhattan distance"                        )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal Manhattan Astar )  0
-    solve goal xs (Just st, Nothing) = putStrLn ( "Solving grid using the " ++ (show st) ++ " algorihtm and the Manhattan distance"          )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal Manhattan st    )  0
-    solve goal xs (Nothing, Just d)  = putStrLn ( "Solving grid using the Astar algorihtm and the " ++ (show d) ++ " distance"               )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal d         Astar )  0
-    solve goal xs (Just st, Just d)  = putStrLn ( "Solving grid using the " ++ (show st) ++ " algorihtm and the " ++ (show d) ++ " distance" )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal d         st    )  0
+    solve goal xs (Nothing, Nothing) = putStrLn ( "Solving grid using the " ++ (show defaultSearch) ++ " algorihtm and the " ++ (show defaultHeuristic) ++ " distance"  )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal defaultHeuristic defaultSearch )  0
+    solve goal xs (Just st, Nothing) = putStrLn ( "Solving grid using the " ++ (show st) ++ " algorihtm and the " ++ (show defaultHeuristic) ++ " distance"             )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal defaultHeuristic st            )  0
+    solve goal xs (Nothing, Just d)  = putStrLn ( "Solving grid using the " ++ (show defaultSearch) ++ " algorihtm and the " ++ (show d) ++ " distance"                 )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal d                defaultSearch )  0
+    solve goal xs (Just st, Just d)  = putStrLn ( "Solving grid using the " ++ (show st) ++ " algorihtm and the " ++ (show d) ++ " distance"                            )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal d                st            )  0
