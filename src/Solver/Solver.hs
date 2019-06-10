@@ -39,9 +39,9 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
     runSearch :: Grid -> [Grid] -> PQ.MinPQueue Int [Grid] -> S.Set Grid -> NextNodesFunc -> Int -> Int -> Int -> IO ()
     runSearch goal xss os cs nn n m l
         | (head xss) == goal                                    = (displayGrid . head) xss >> putStrLn ("Solved with :\n- Time complexity  : " ++ show n ++ "\n- Space complexity : " ++ show m)
-        | suc /= PQ.empty                                       = (displayGrid . head) xss >> runSearch  goal  ((minim suc):xss)  (PQ.union os $ PQ.deleteMin suc)            cs'  nn  (n+1)  size (l+1)
-        | suc == PQ.empty && os' /= PQ.empty                    = (displayGrid . head) xss >> runSearch  goal  ((minim os'):xss)  (PQ.filter (/=(snd $ PQ.findMin os')) os)   cs'  nn  (n+1)  size (l+1)
-        | suc == PQ.empty && os' == PQ.empty && os /= PQ.empty  = (displayGrid . head) xss >> runSearch  goal  (tail xss)         os                                          cs'  nn  (n+1)  size (l-1)
+        | suc /= PQ.empty                                       = runSearch  goal  ((minim suc):xss)  (PQ.union os $ PQ.deleteMin suc)            cs'  nn  (n+1)  size (l+1)
+        | suc == PQ.empty && os' /= PQ.empty                    = runSearch  goal  ((minim os'):xss)  (PQ.filter (/=(snd $ PQ.findMin os')) os)   cs'  nn  (n+1)  size (l+1)
+        | suc == PQ.empty && os' == PQ.empty && os /= PQ.empty  = runSearch  goal  (tail xss)         os                                          cs'  nn  (n+1)  size (l-1)
         | otherwise = putErr E.NotSolvable where
             suc     = PQ.filter (\x -> S.notMember (head x) cs) $ nn l xss
             os'     = PQ.filter (\x -> tail x == tail xss && S.notMember (head x) cs) os
