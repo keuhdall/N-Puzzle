@@ -37,15 +37,14 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
     -- Runs the search using a given SearchType. The SearchType will be used in nodes cost computation
     runSearch :: Grid -> [Grid] -> PQ.MinPQueue Int [Grid] -> S.Set Grid -> NextNodesFunc -> Int -> Int -> IO ()
     runSearch goal xss os cs nn n m
-        | xs == goal = displayGrid xs >> putStrLn ("Solved with :\n- Time complexity  : " ++ show n ++ "\n- Space complexity : " ++ show m)
+        | (head xss) == goal                                    = (displayGrid . head) xss >> putStrLn ("Solved with :\n- Time complexity  : " ++ show n ++ "\n- Space complexity : " ++ show m)
         | suc /= PQ.empty                                       = runSearch  goal  ((minim suc):xss)  (PQ.union os $ PQ.deleteMin suc)            cs'  nn  (n+1)  size
         | suc == PQ.empty && os' /= PQ.empty                    = runSearch  goal  ((minim os'):xss)  (PQ.filter (/= (snd $ PQ.findMin os')) os)  cs'  nn  (n+1)  size
         | suc == PQ.empty && os' == PQ.empty && os /= PQ.empty  = runSearch  goal  (tail xss)         os                                          cs'  nn  (n+1)  size
         | otherwise = putErr E.NotSolvable where
-            xs      = head xss
             suc     = PQ.filter (\x -> S.notMember (head x) cs) $ nn xss
             os'     = PQ.filter (\x -> tail x == tail xss && S.notMember (head x) cs) os
-            cs'     = S.insert xs cs
+            cs'     = S.insert (head xss) cs
             minim x = head . snd $ PQ.findMin x
             size    = if PQ.size os > m then PQ.size os else m
 

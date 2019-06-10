@@ -16,7 +16,6 @@ main = do
     args <- getArgs
     checkArgs args
     content <- readFile $ args !! 0
-    let l = lines content; w = map words $ drop 1 $ clearInput l; pargs = parseArgs args
-    case transformInput w of
-        Just grid   -> solve (getSolvedGrid $ length grid) grid pargs
+    case transformInput (words <$> (drop 1 . clearInput . lines $ content)) of
+        Just grid   -> solve (getSolvedGrid $ length grid) grid (parseArgs args)
         Nothing     -> putErr E.InvalidInput
