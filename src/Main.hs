@@ -4,7 +4,6 @@ import System.Environment
 import System.Exit
 import qualified Error as E
 import Solver.Grid
-import Solver.Distance
 import Solver.Solver
 import Logger
 import Parser

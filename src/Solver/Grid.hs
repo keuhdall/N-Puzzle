@@ -14,12 +14,12 @@ module Solver.Grid where
             | y + iy == n || y + iy < 0 || iy /= 0 && (xs' !! (x+(y+iy)*n)) /= (-1)     = getSolvedGrid' (replace xs' cur $ x+y*n) (cur+1) (x-iy) (-iy) y 0
             | otherwise = getSolvedGrid' (replace xs' cur $ x+y*n) (cur+1) (x+ix) ix (y+iy) iy
         replace [] _ _ = []
-        replace (x:xs) x' n
-            | n == 0    = x':xs
-            | otherwise = x:replace xs x' (n-1)
+        replace (x:xs) x' m
+            | m == 0    = x':xs
+            | otherwise = x:replace xs x' (m-1)
 
     chunkList :: Int -> [Int] -> Grid
-    chunkList n [] = []
+    chunkList _ [] = []
     chunkList n xs = (take n xs) : (chunkList n (drop n xs))
 
     getPuzzleSize :: Grid -> Int

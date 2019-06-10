@@ -5,7 +5,7 @@ module Solver.Distance (Distance(..), calcDistance, readDistance) where
 
     calcDistance :: Distance -> Grid -> Grid -> Int
     calcDistance d a b = calcDistance' (concat a) (concat b) 0 where
-        calcDistance' [] ys n = n
+        calcDistance' [] _ n = n
         calcDistance' (x:xs) ys n = let dist = getDistance d in calcDistance' xs ys (n + sum [if x == y && x /= 0 then dist (getCoordinates a x) (getCoordinates b y) else 0 | y <- ys])
 
     manhattanDistance :: (Int, Int) -> (Int, Int) -> Int
