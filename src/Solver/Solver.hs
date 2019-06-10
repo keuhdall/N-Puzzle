@@ -1,5 +1,4 @@
 module Solver.Solver (SearchType(..), readSearchType, solve) where
-    import Data.Sort
     import qualified Data.PQueue.Prio.Min as PQ
     import qualified Data.HashSet as S
     import qualified Error as E

@@ -2,7 +2,6 @@ module Parser (clearInput, transformInput, parseArgs) where
     import Data.Char
     import Data.Sort
     import Data.List.Split
-    import Text.Read
 
     import Solver.Distance
     import Solver.Solver
