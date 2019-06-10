@@ -31,8 +31,8 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
     -- Returns a PQueue containing the next nodes (value + cost)
     getNextNodes :: Grid -> Distance -> SearchType -> [Grid] -> PQ.MinPQueue Int [Grid]
     getNextNodes goal d st xss = PQ.fromList $ zip costs neighbors where
-        costs = map (getCost st d xss goal) $ map head neighbors
-        neighbors = map (:xss) $ getNeighbors $ head xss
+        costs       = (getCost st d xss goal) <$> head <$> neighbors
+        neighbors   = map (:xss) $ getNeighbors $ head xss
 
     -- Runs the search using a given SearchType. The SearchType will be used in nodes cost computation
     runSearch :: Grid -> [Grid] -> PQ.MinPQueue Int [Grid] -> S.Set Grid -> NextNodesFunc -> Int -> IO ()
@@ -45,8 +45,8 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
             xs      = head xss
             suc     = PQ.filter (\x -> S.notMember (head x) cs) $ nn xss
             os'     = PQ.filter (\x -> tail x == tail xss && S.notMember (head x) cs) os
-            minim x = head . snd $ PQ.findMin x
             cs'     = S.insert xs cs
+            minim x = head . snd $ PQ.findMin x
 
     defaultSearch :: SearchType
     defaultSearch = Astar

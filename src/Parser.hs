@@ -27,6 +27,7 @@ module Parser (clearInput, transformInput, parseArgs) where
         | all isDigit (concat $ concat xss) == False = Nothing
         | otherwise = let xss' = (map read) <$> xss in if isValidSize xss' && hasValidContent xss' then Just xss' else Nothing
 
+    -- Check programs args, and returns associated flags
     parseArgs :: [String] -> (Maybe SearchType, Maybe Distance)
     parseArgs xs = case length xs of
         1   -> (Nothing, Nothing)

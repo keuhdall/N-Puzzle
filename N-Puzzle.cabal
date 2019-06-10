@@ -17,7 +17,6 @@ cabal-version:       >=1.10
 
 executable N-Puzzle
   ghc-options:
-    -Wall
     -threaded
     -O3
   main-is:             Main.hs
