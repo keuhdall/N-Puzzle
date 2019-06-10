@@ -3,7 +3,7 @@ module Logger (displayHelp, displayGrid, putErr) where
     import Error
 
     displayHelp :: IO ()
-    displayHelp = putStrLn $ "Usage : cabal run [filename] (method) (heuristic)\n \
+    displayHelp = putStrLn $ "Usage : N-Puzzle [filename] (method) (heuristic)\n \
     \ \n \
     \ Supported metods :\n \
     \ - astar \n \
