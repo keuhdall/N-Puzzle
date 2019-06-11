@@ -1,6 +1,7 @@
 module Logger (displayHelp, displayGrid, putErr) where
     import Solver.Grid
     import Error
+    import Text.Printf (printf)
 
     displayHelp :: IO ()
     displayHelp = putStrLn $ "Usage : N-Puzzle [filename] (method) (heuristic)\n \
