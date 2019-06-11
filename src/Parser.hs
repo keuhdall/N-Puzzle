@@ -7,7 +7,7 @@ module Parser (clearInput, transformInput, parseArgs) where
     import Solver.Solver
 
     maxPuzzle :: Int
-    maxPuzzle = 5
+    maxPuzzle = 9
 
     -- Strips comments and empty lines
     clearInput :: [String] -> [String]
