@@ -2,4 +2,5 @@
 dist/
 dist-newstyle/
 *~
+*.prof
 cabal.exe
