@@ -1,10 +1,9 @@
-module Solver.Solver (SearchType(..), readSearchType, solve) where
+module Solver (SearchType(..), readSearchType, solve) where
     import qualified Data.PQueue.Prio.Min as PQ
     import qualified Data.HashSet as S
-    import qualified Error as E
     import Logger
-    import Solver.Grid
-    import Solver.Distance
+    import Grid
+    import Distance
 
     data SearchType = Astar | Uniform | Greedy deriving Eq
     type NextNodesFunc = Int -> [Grid] -> PQ.MinPQueue Int [Grid]
@@ -41,7 +40,7 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
         | (head xss) == goal                        = mapM_ displayGrid (reverse xss) >> putStrLn ("Solved with :\n- Time complexity  : " ++ show n ++ "\n- Space complexity : " ++ show m)
         | suc /= PQ.empty                           = runSearch  goal  ((minim suc):xss)  (PQ.union os $ PQ.deleteMin suc)  cs'  nn  (n+1)  size (l+1)
         | suc == PQ.empty && os /= PQ.empty         = runSearch  goal  (tail xss)         os                                cs'  nn  (n+1)  size (l-1)
-        | otherwise = putErr E.NotSolvable where
+        | otherwise = putErr NotSolvable where
             suc     = PQ.filter (\x -> S.notMember (head x) cs) $ nn l xss
             cs'     = S.insert (head xss) cs
             minim x = head . snd $ PQ.findMin x

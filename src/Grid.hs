@@ -1,4 +1,4 @@
-module Solver.Grid where
+module Grid where
     import Prelude hiding (Left, Right)
     import Data.Maybe
 

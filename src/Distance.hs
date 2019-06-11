@@ -1,5 +1,5 @@
-module Solver.Distance (Distance(..), calcDistance, readDistance) where
-    import Solver.Grid
+module Distance (Distance(..), calcDistance, readDistance) where
+    import Grid
 
     data Distance = Manhattan | Diagonal | Euclidian | Hamming deriving (Show, Eq)
 

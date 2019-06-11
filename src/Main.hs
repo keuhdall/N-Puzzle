@@ -2,9 +2,8 @@ module Main where
 
 import System.Environment
 import System.Exit
-import qualified Error as E
-import Solver.Grid
-import Solver.Solver
+import Grid
+import Solver
 import Logger
 import Parser
 
@@ -18,4 +17,4 @@ main = do
     content <- readFile $ args !! 0
     case transformInput (words <$> (drop 1 . clearInput . lines $ content)) of
         Just grid   -> solve (getSolvedGrid $ length grid) grid (parseArgs args)
-        Nothing     -> putErr E.InvalidInput
+        Nothing     -> putErr InvalidInput

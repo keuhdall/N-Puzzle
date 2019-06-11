@@ -1,7 +1,12 @@
-module Logger (displayHelp, displayGrid, putErr) where
-    import Solver.Grid
-    import Error
+module Logger (Error(..), displayHelp, displayGrid, putErr) where
+    import Grid
     import Text.Printf (printf)
+
+    data Error = NotSolvable | InvalidInput
+
+    instance Show Error where
+        show NotSolvable        = "Error: puzzle is not solvable."
+        show InvalidInput       = "Error: input is invalid."
 
     displayHelp :: IO ()
     displayHelp = putStrLn $ "Usage : N-Puzzle [filename] (method) (heuristic)\n \
