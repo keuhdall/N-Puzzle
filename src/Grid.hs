@@ -14,7 +14,7 @@ module Grid where
             | y + iy == n || y + iy < 0 || iy /= 0 && xs' !! (x+(y+iy)*n) /= (-1)   = getSolvedGrid' (replace xs' cur $ x+y*n) (cur+1) (x-iy) (-iy) y      0
             | otherwise = getSolvedGrid' (replace xs' cur $ x+y*n) (cur+1) (x+ix) ix (y+iy) iy
         replace [] _ _ = []
-        replace (x:xs) x' 0 = x':xs
+        replace (_:xs) x' 0 = x':xs
         replace (x:xs) x' m = x:replace xs x' (m-1)
 
     chunkList :: Int -> [Int] -> Grid
