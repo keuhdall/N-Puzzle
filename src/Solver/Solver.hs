@@ -38,7 +38,7 @@ module Solver.Solver (SearchType(..), readSearchType, solve) where
     -- goal : stage to reach ; xss : path from begining to current node ; os : open set ; cs : close set ; nn : nextNodes function ; n : time complexity ; m : space complexity ; l : xss length
     runSearch :: Grid -> [Grid] -> PQ.MinPQueue Int [Grid] -> S.Set Grid -> NextNodesFunc -> Int -> Int -> Int -> IO ()
     runSearch goal xss os cs nn n m l
-        | (head xss) == goal                                    = mapM_ (displayGrid . reverse) xss >> putStrLn ("Solved with :\n- Time complexity  : " ++ show n ++ "\n- Space complexity : " ++ show m)
+        | (head xss) == goal                                    = mapM_ displayGrid (reverse xss) >> putStrLn ("Solved with :\n- Time complexity  : " ++ show n ++ "\n- Space complexity : " ++ show m)
         | suc /= PQ.empty                                       = runSearch  goal  ((minim suc):xss)  (PQ.union os $ PQ.deleteMin suc)            cs'  nn  (n+1)  size (l+1)
         | suc == PQ.empty && os' /= PQ.empty                    = runSearch  goal  ((minim os'):xss)  (PQ.filter (/=(snd $ PQ.findMin os')) os)   cs'  nn  (n+1)  size (l+1)
         | suc == PQ.empty && os' == PQ.empty && os /= PQ.empty  = runSearch  goal  (tail xss)         os                                          cs'  nn  (n+1)  size (l-1)
