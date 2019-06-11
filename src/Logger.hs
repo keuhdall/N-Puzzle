@@ -17,19 +17,13 @@ module Logger (displayHelp, displayGrid, putErr) where
     \ - euclidian \n \
     \ - hamming \n"
 
-    -- displayGrid :: Grid -> IO ()
-    -- displayGrid grid = let size = getPuzzleSize grid in mapM_ (\xs -> putStrLn . concat . map (++" ") $ map show xs) grid >> (putStrLn $ replicate (2 * size - 1) '-')
-
     displayGrid :: Grid -> IO ()
-    displayGrid grid =
-        printElems elems (getPuzzleSize grid) 1 (maximum (map (length . show) elems))
-        where
-            elems = concat grid
-            printElems :: [Int] -> Int -> Int -> Int -> IO ()
-            printElems list size n alignment
-                | list == [] = putStrLn $ replicate ((size * (alignment + 1)) - 1) '-'
-                | n `mod` size == 0 = printf "%*d\n" alignment (head list) >> printElems (tail list) size (n + 1) alignment
-                | otherwise = printf "%*d " alignment (head list) >> printElems (tail list) size (n + 1) alignment
+    displayGrid grid = printElems (concat grid) 1 where
+        size  = getPuzzleSize grid
+        align = maximum $ (length . show) <$> (concat grid)
+        printElems xs@(x:xs') n
+            | xs == []  = putStrLn $ replicate ((size * (align + 1)) - 1) '-'
+            | otherwise = printf (if n `mod` size == 0 then "%*d\n" else "%*d") align x >> printElems xs' (n+1)
 
     putErr :: Error -> IO ()
     putErr e = putStrLn $ show e
