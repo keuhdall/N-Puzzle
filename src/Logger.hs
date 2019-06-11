@@ -21,9 +21,8 @@ module Logger (displayHelp, displayGrid, putErr) where
     displayGrid grid = printElems (concat grid) 1 where
         size  = getPuzzleSize grid
         align = maximum $ (length . show) <$> (concat grid)
-        printElems xs@(x:xs') n
-            | xs == []  = putStrLn $ replicate ((size * (align + 1)) - 1) '-'
-            | otherwise = printf (if n `mod` size == 0 then "%*d\n" else "%*d") align x >> printElems xs' (n+1)
+        printElems [] n = putStrLn $ replicate ((size * (align + 1)) - 1) '-'
+        printElems xs@(x:xs') n = printf (if n `mod` size == 0 then "%*d\n" else "%*d ") align x >> printElems xs' (n+1)
 
     putErr :: Error -> IO ()
     putErr e = putStrLn $ show e
