@@ -1,4 +1,4 @@
-module Grid where
+module Grid (Grid, getSolvedGrid, chunkList, getPuzzleSize, getCoordinates, getNeighbors) where
     import Prelude hiding (Left, Right)
     import Data.Maybe
 
