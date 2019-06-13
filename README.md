@@ -4,14 +4,14 @@
 
 
 ## Implementation :
-This project uses 3 different search algorithm :
+This project uses 3 different search algorithms :
 - The A* algorithm
 - The Greedy Search algorithm
 - The Uniform Cost algorithm
 
 And 4 different heuristics :
 - The manhanttan distance
-- The Eclidian distance
+- The Euclidian distance
 - The diagonal distance
 - The Hamming distance
 
