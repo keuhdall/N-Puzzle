@@ -1,4 +1,4 @@
-module Logger (Error(..), displayGrid, putErr) where
+module Logger (Error(..), displayHelp, displayGrid, putErr) where
     import Grid
     import Text.Printf (printf)
 
@@ -7,6 +7,20 @@ module Logger (Error(..), displayGrid, putErr) where
     instance Show Error where
         show NotSolvable        = "Error: puzzle is not solvable."
         show InvalidInput       = "Error: input is invalid."
+
+    displayHelp :: IO ()
+    displayHelp = putStrLn $ "Usage : N-Puzzle [filename] (method) (heuristic)\n \
+    \ \n \
+    \ Supported metods :\n \
+    \ - astar \n \
+    \ - uniform \n \
+    \ - greedy \n \
+    \ \n \
+    \ Supported heuristics : \n \
+    \ - manhattan \n \
+    \ - diagonal \n \
+    \ - euclidian \n \
+    \ - hamming \n"
 
     displayGrid :: Grid -> IO ()
     displayGrid grid = printElems (concat grid) 1 where
