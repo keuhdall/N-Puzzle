@@ -1,14 +1,14 @@
 module Main where
 
-import System.Environment
-import System.Exit
-import Grid
-import Solver
+import System.Environment (getArgs)
+import System.Exit (exitSuccess)
+import Grid (getSolvedGrid)
+import Solver (solve)
 import Logger
 import Parser
 
 checkArgs :: [String] -> IO ()
-checkArgs xs = if length xs == 0 then displayHelp >> exitSuccess else pure ()
+checkArgs xs = if null xs then displayHelp >> exitSuccess else pure ()
 
 main :: IO ()
 main = do
