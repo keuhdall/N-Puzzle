@@ -29,7 +29,7 @@ module Grid (Grid, getSolvedGrid, chunkList, getPuzzleSize, getCoordinates, getN
     fromCoordinates grid (x,y) = ((grid !! y) !! x)
 
     getCoordinates :: Grid -> Int -> (Int, Int)
-    getCoordinates grid n = let size = getPuzzleSize grid - 1 in head $ filter(/=(-1,-1)) [if ((grid !! y) !! x) == n then (x,y) else (-1,-1) | x <- [0..size], y <- [0..size]]
+    getCoordinates grid n = let size = getPuzzleSize grid - 1 in head [(x,y) | x <- [0..size], y <- [0..size], ((grid !! y) !! x) == n]
 
     -- Returns the coordinates of the zero in a given grid
     getZero :: Grid -> (Int, Int)
