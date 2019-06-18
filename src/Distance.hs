@@ -3,6 +3,7 @@ module Distance (Distance(..), calcDistance, readDistance) where
 
     data Distance = Manhattan | Diagonal | Euclidian | Hamming deriving (Show, Eq)
 
+    -- Applies one of the heuristic functions to all values in a given grid
     calcDistance :: Distance -> Grid -> Grid -> Int
     calcDistance d a b = calcDistance' (concat a) (concat b) 0 where
         calcDistance' [] _ n = n
@@ -28,6 +29,7 @@ module Distance (Distance(..), calcDistance, readDistance) where
         Euclidian -> euclidianDistance
         Hamming   -> hammingDistance
 
+    -- Matches a given String with an associated heuristic function
     readDistance :: String -> Maybe Distance
     readDistance s = case s of
         "manhattan" -> Just Manhattan
