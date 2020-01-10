@@ -26,10 +26,10 @@ module Grid (Grid, getSolvedGrid, chunkList, getPuzzleSize, getCoordinates, getN
 
     -- Returns the value associated to the given coordinates in the puzzle
     fromCoordinates :: Grid -> (Int, Int) -> Int
-    fromCoordinates grid (x,y) = ((grid !! y) !! x)
+    fromCoordinates grid (x,y) = (grid !! y) !! x
 
     getCoordinates :: Grid -> Int -> (Int, Int)
-    getCoordinates grid n = let size = getPuzzleSize grid - 1 in head [(x,y) | x <- [0..size], y <- [0..size], ((grid !! y) !! x) == n]
+    getCoordinates grid n = let size = getPuzzleSize grid - 1 in head [(x,y) | x <- [0..size], y <- [0..size], (grid !! y) !! x == n]
 
     -- Returns the coordinates of the zero in a given grid
     getZero :: Grid -> (Int, Int)
@@ -37,7 +37,7 @@ module Grid (Grid, getSolvedGrid, chunkList, getPuzzleSize, getCoordinates, getN
 
     -- Returns a list of coordinates which are the coordinates of the neighbors of the `0` value in the puzzle
     getNeighbors :: Grid -> [Grid]
-    getNeighbors grid = map fromJust $ filter (/= Nothing) $ (updateGrid grid) <$> [Up, Down, Left, Right]
+    getNeighbors grid = map fromJust . filter isJust $ (updateGrid grid) <$> [Up, Down, Left, Right]
 
     -- Get the new coordinates of the zero value
     moveZero :: Move -> (Int, Int) -> (Int, Int)

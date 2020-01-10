@@ -11,7 +11,7 @@ module Parser (clearInput, transformInput, parseArgs) where
 
     -- Strips comments and empty lines
     clearInput :: [String] -> [String]
-    clearInput xs = filter (/="") $ map (\x -> (splitOn "#" x) !! 0) xs
+    clearInput xs = filter (/="") $ map (head . splitOn "#") xs
 
     -- Checking size of the puzzle
     isValidSize :: [[Int]] -> Bool

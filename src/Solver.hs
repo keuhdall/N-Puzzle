@@ -37,7 +37,7 @@ module Solver (SearchType(..), readSearchType, solve) where
     -- goal : stage to reach ; xss : path from begining to current node ; os : open set ; cs : close set ; nn : nextNodes function ; n : time complexity ; m : space complexity ; l : xss length
     runSearch :: Grid -> [Grid] -> PQ.MinPQueue Int [Grid] -> S.Set Grid -> NextNodesFunc -> Int -> Int -> Int -> IO ()
     runSearch goal xss os cs nn n m l
-        | (head xss) == goal                        = mapM_ displayGrid (reverse xss) >> putStrLn ("Solved with :\n- Time complexity  : " ++ show n ++ "\n- Space complexity : " ++ show m)
+        | head xss == goal                          = mapM_ displayGrid (reverse xss) >> putStrLn ("Solved with :\n- Time complexity  : " ++ show n ++ "\n- Space complexity : " ++ show m)
         | suc /= PQ.empty                           = runSearch  goal  ((minim suc):xss)  (PQ.union os $ PQ.deleteMin suc)  cs'  nn  (n+1)  size (l+1)
         | suc == PQ.empty && os /= PQ.empty         = runSearch  goal  (tail xss)         os                                cs'  nn  (n+1)  size (l-1)
         | otherwise = putErr NotSolvable where
@@ -53,7 +53,7 @@ module Solver (SearchType(..), readSearchType, solve) where
     defaultHeuristic = Manhattan
 
     solve :: Grid -> Grid -> (Maybe SearchType, Maybe Distance) -> IO ()
-    solve goal xs (Nothing, Nothing) = putStrLn ( "Solving grid using the " ++ (show defaultSearch) ++ " algorithm and the " ++ (show defaultHeuristic) ++ " distance"  )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal defaultHeuristic defaultSearch )  0 0 1
-    solve goal xs (Just st, Nothing) = putStrLn ( "Solving grid using the " ++ (show st) ++ " algorithm and the " ++ (show defaultHeuristic) ++ " distance"             )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal defaultHeuristic st            )  0 0 1
-    solve goal xs (Nothing, Just d)  = putStrLn ( "Solving grid using the " ++ (show defaultSearch) ++ " algorithm and the " ++ (show d) ++ " distance"                 )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal d                defaultSearch )  0 0 1
-    solve goal xs (Just st, Just d)  = putStrLn ( "Solving grid using the " ++ (show st) ++ " algorithm and the " ++ (show d) ++ " distance"                            )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal d                st            )  0 0 1
+    solve goal xs (Nothing, Nothing) = putStrLn ( "Solving grid using the " ++ show defaultSearch ++ " algorithm and the " ++ show defaultHeuristic ++ " distance" )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal defaultHeuristic defaultSearch )  0 0 1
+    solve goal xs (Just st, Nothing) = putStrLn ( "Solving grid using the " ++ show st            ++ " algorithm and the " ++ show defaultHeuristic ++ " distance" )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal defaultHeuristic st            )  0 0 1
+    solve goal xs (Nothing, Just d)  = putStrLn ( "Solving grid using the " ++ show defaultSearch ++ " algorithm and the " ++ show d                ++ " distance" )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal d                defaultSearch )  0 0 1
+    solve goal xs (Just st, Just d)  = putStrLn ( "Solving grid using the " ++ show st            ++ " algorithm and the " ++ show d                ++ " distance" )  >>  runSearch goal [xs]  PQ.empty  S.empty  ( getNextNodes goal d                st            )  0 0 1

@@ -16,7 +16,7 @@ module Distance (Distance(..), calcDistance, readDistance) where
     diagonalDistance (x,y) (x',y') = let a = (abs $ x' - x); b = (abs $ y' - y) in max a b
 
     euclidianDistance :: (Int, Int) -> (Int, Int) -> Int
-    euclidianDistance (x,y) (x',y') = floor $ sqrt $ fromIntegral $ (x' - x)^2 + (y' - y)^2
+    euclidianDistance (x,y) (x',y') = floor . sqrt . fromIntegral $ (x' - x)^2 + (y' - y)^2
 
     hammingDistance :: (Int, Int) -> (Int, Int) -> Int
     hammingDistance x y = if x == y then 1 else 0
